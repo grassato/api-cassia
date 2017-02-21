@@ -28,7 +28,7 @@ dms_filter:
     auto_filter_forms: false
 
 nelmio_api_doc:
-    name:                 'API Name'
+    name:                 'API da Cassia'
     exclude_sections:     []
     default_sections_opened:  true
     cache:
@@ -38,21 +38,19 @@ nelmio_api_doc:
             authentication:             # default is `~` (`null`), if set, the sandbox automatically
                                         # send authenticated requests using the configured `delivery`
 
-                name: access_token      # access token name or query parameter name or header name
+                name: Authorization      # access token name or query parameter name or header name
 
                 delivery: http          # `query`, `http`, and `header` are supported
 
                 # Required if http delivery is selected.
                 type:     bearer         # `basic`, `bearer` are supported
 
-                custom_endpoint: true   # default is `false`, if `true`, your user will be able to
+                custom_endpoint: false   # default is `false`, if `true`, your user will be able to
                                         # specify its own endpoint
 
             enabled:  true              # default is `true`, you can set this parameter to `false`
                                         # to disable the sandbox
-
-            endpoint: http://sf3/     # default is `/app_dev.php`, use this parameter
-                                                    # to define which URL to call through the sandbox
+                                        # to define which URL to call through the sandbox
 
             accept_type: application/json           # default is `~` (`null`), if set, the value is
                                                     # automatically populated as the `Accept` header

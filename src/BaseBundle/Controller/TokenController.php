@@ -32,7 +32,9 @@ class TokenController extends Controller
      *  description="Generate new use token.",
      *  parameters={
      *  },
-     *  requirements={
+     *  parameters={
+     *      {"name"="username", "dataType"="string", "required"=true, "description"="User username"},
+     *      {"name"="password", "dataType"="string", "required"=true, "description"="User password"},
      *  },
      * statusCodes={
      *         200="Returned when successful",

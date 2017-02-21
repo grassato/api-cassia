@@ -19,6 +19,7 @@ class PostController extends BaseController
      * @ApiDoc(
      *  section="Api Demo",
      *  description="Update a resource.",
+     *  authentication=true,
      *  parameters={
      *  },
      *  requirements={
@@ -67,6 +68,7 @@ class PostController extends BaseController
      * @ApiDoc(
      *  section="Api Demo",
      *  description="Create a resource",
+     *  authentication=true,
      *  parameters={
      *  },
      *  requirements={
@@ -103,6 +105,7 @@ class PostController extends BaseController
      * @ApiDoc(
      *  section="Api Demo",
      *  description="Fetch a resource.",
+     *  authentication=true,
      *  parameters={
      *  },
      *  requirements={
@@ -128,6 +131,7 @@ class PostController extends BaseController
      * @ApiDoc(
      *  section="Api Demo",
      *  description="Fetch all or a subset of resources.",
+     *  authentication=true,
      *  parameters={
      *  },
      *  requirements={
@@ -147,6 +151,16 @@ class PostController extends BaseController
      */
     public function cgetAction(Request $request)
     {
+
+        $message = \Swift_Message::newInstance()
+            ->setSubject('Hello Email')
+            ->setFrom('send@example.com')
+            ->setTo('recipient@example.com')
+            ->setBody("Nika veio")
+
+        ;
+        $this->get('mailer')->send($message);
+
         $filtro['sort'] = $this->sanitizaCampoDeOrdenacao($request->query->get('sort', ''));
         $qb = $this->getManager()->getRepo()->getPostQueryBuilder($filtro, false);
 

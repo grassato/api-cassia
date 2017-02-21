@@ -8,23 +8,16 @@ doctrine:
         user:     "%database_user%"
         password: "%database_password%"
         charset:  UTF8
-        # if using pdo_sqlite as your database driver:
-        #   1. add the path in parameters.yml
-        #     e.g. database_path: "%kernel.root_dir%/data/data.db3"
-        #   2. Uncomment database_path in parameters.yml.dist
-        #   3. Uncomment next line:
-        #     path:     "%database_path%"
 
     orm:
         auto_generate_proxy_classes: "%kernel.debug%"
         naming_strategy: doctrine.orm.naming_strategy.underscore
         auto_mapping: true
-        #metadata_cache_driver: apcu
         filters:
             softdeleteable:
                 class: Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter
                 enabled: true
-
+#        metadata_cache_driver: apcu
 #        query_cache_driver: apcu
 #        result_cache_driver: apcu
 #        second_level_cache:
@@ -43,6 +36,7 @@ doctrine:
 #        - AppBundle\Entity\Comment
 #    global_ignore_properties:
 #        - createdAt
+
 #doctrine_migrations:
 #    dir_name: "%kernel.root_dir%/DoctrineMigrations"
 #    namespace: CIANDT\Migrations

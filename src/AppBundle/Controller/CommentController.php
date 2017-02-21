@@ -16,6 +16,7 @@ class CommentController extends BaseController
      * @ApiDoc(
      *  section="Api Demo",
      *  description="Fetch a resource.",
+     *  authentication=true,
      *  parameters={
      *  },
      *  requirements={
