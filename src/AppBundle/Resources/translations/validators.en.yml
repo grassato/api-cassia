@@ -1,0 +1,8 @@
+# validators.en.yml
+comment.blank: Please don't leave your comment blank!
+comment.too_short: Comment is too short ({{ limit }} characters minimum)
+comment.too_long: Comment is too long ({{ limit }} characters maximum)
+post.blank_content: Your post should have some content!
+post.too_short: Post content is too short ({{ limit }} characters minimum)
+post.too_long: Post is too long ({{ limit }} characters maximum)
+

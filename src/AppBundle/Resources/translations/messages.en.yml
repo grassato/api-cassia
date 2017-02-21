@@ -1,0 +1,10 @@
+#entity.field
+label.content: Content
+label.title: Title
+label.save: Save !
+messages: Mensages
+action.show: Show
+action.edit: Edit
+action.delete: Delete
+post.deleted_successfully: Post deletado com sucesso
+post.deleted_fail: Falha ao remove um post

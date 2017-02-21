@@ -1,0 +1,7 @@
+# src/AppBundle\Entity\Post/comment.yml
+AppBundle\Entity\Comment:
+    comments_{1..10}:
+        content: <realText(50,2)>
+        updatedAt: <dateTime()>
+        createdAt: <dateTime()>
+        post: "@post_<numberBetween(1,10)>" #"@post_*"

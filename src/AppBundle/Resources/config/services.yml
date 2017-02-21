@@ -1,0 +1,22 @@
+services:
+    app.manager:
+      class: AppBundle\Manager\AppManager
+      calls:
+        - [setEventDispatcher, ["@event_dispatcher"]]
+        - [setLogger, ["@logger"]]
+      arguments:
+        - '@doctrine.orm.entity_manager'
+      tags:
+          - { name: monolog.logger, channel: leads }
+
+    #### Transformadores do Fractal
+    app_api.transformer.post:
+        class: AppBundle\Transformer\PostTransformer
+        parent: api_transformer.abstract
+        calls:
+            - [setCommentTransformer, ["@app_api.transformer.comment"]]
+
+
+    app_api.transformer.comment:
+        class: AppBundle\Transformer\CommentTransformer
+        parent: api_transformer.abstract

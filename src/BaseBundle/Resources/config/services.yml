@@ -1,0 +1,12 @@
+services:
+    base_jms_serializer.handler.relation:
+        class: BaseBundle\Serializer\RelationsHandler
+        arguments:
+          - "@doctrine.orm.entity_manager"
+        tags:
+          - { name: jms_serializer.handler, type: Relation, direction: serialization, format: json, method: serializeRelation}
+          - { name: jms_serializer.handler, type: Relation, direction: deserialization, format: json, method: deserializeRelation}
+          - { name: jms_serializer.handler, type: Relation<?>, direction: serialization, format: json, method: serializeRelation}
+          - { name: jms_serializer.handler, type: Relation<?>, direction: deserialization, format: json, method: deserializeRelation}
+
+

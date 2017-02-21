@@ -1,0 +1,18 @@
+parameters:
+    database_host: '%env(MYSQL_HOST)%'
+    database_port: '%env(MYSQL_PORT)%'
+    database_name: '%env(MYSQL_DATABASE)%'
+    database_user: '%env(MYSQL_USER)%'
+    database_password: '%env(MYSQL_PASSWORD)%'
+    mailer_transport: smtp
+    mailer_host: 127.0.0.1
+    mailer_user: null
+    mailer_password: null
+    monolog_action_level: 'debug'
+    # A secret key that's used to generate certain security-related tokens
+    secret:            ThisTokenIsNotSoSecretChangeIt
+    locale_supported: en|fr|de|es|cs|nl|ru|uk|ro|pt_BR|pl|it|ja|id|ca
+    jwt_private_key_path: '%kernel.root_dir%/../var/jwt/private.pem' # ssh private key path
+    jwt_public_key_path:  '%kernel.root_dir%/../var/jwt/public.pem'  # ssh public key path
+    jwt_key_pass_phrase:  ''                                         # ssh key pass phrase
+    jwt_token_ttl:        3600

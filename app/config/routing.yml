@@ -1,0 +1,25 @@
+#app:
+#    resource: "@AppBundle/Controller/"
+#    type:     annotation
+base_api:
+    resource: "@BaseBundle/Controller"
+    prefix:         /api/
+
+gesdinet_jwt_refresh_token:
+    path:     /api/token/refresh
+    defaults: { _controller: gesdinet.jwtrefreshtoken:refresh }
+
+api:
+    resource: "@AppBundle/Controller"
+    type: rest
+    prefix:         /api/v1/{_locale}
+    defaults:
+        _locale: en
+        _format: json
+    requirements:
+        _locale: "%locale_supported%"
+
+NelmioApiDocBundle:
+    resource: "@NelmioApiDocBundle/Resources/config/routing.yml"
+    prefix:   /doc
+

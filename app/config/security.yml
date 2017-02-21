@@ -1,0 +1,74 @@
+security:
+
+#    encoders:
+#        Symfony\Component\Security\Core\User\User: plaintext
+#
+#    role_hierarchy:
+#        ROLE_ADMIN: ROLE_USER
+#
+#    providers:
+#        in_memory:
+#            memory:
+#                users:
+#                    user:  { password: 123456, roles: [ 'ROLE_USER' ] }
+#                    admin: { password: 123456, roles: [ 'ROLE_ADMIN' ] }
+    encoders:
+        AppBundle\Entity\User: bcrypt
+
+    providers:
+        database_users:
+            entity: { class: AppBundle:User }
+    firewalls:
+        # disables authentication for assets and the profiler, adapt it according to your needs
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+#
+#        main:
+#            anonymous: ~
+            # activate different ways to authenticate
+
+            # http_basic: ~
+            # http://symfony.com/doc/current/security.html#a-configuring-how-your-users-will-authenticate
+
+            # form_login: ~
+            # http://symfony.com/doc/current/cookbook/security/form_login_setup.html
+#        login:
+#            pattern:  ^/api/login
+#            stateless: true
+#            anonymous: true
+#            form_login:
+#                check_path:               /api/login_check
+#                success_handler:          lexik_jwt_authentication.handler.authentication_success
+#                failure_handler:          lexik_jwt_authentication.handler.authentication_failure
+#                require_previous_session: false
+        api_login:
+            pattern:  ^/api/token/login
+            stateless: true
+            anonymous: true
+        refresh:
+            pattern:  ^/api/token/refresh
+            stateless: true
+            anonymous: true
+        api:
+            pattern:   ^/api
+            stateless: true
+            guard:
+                authenticators:
+                    - lexik_jwt_authentication.jwt_token_authenticator #jwt_token_authenticator
+#            lexik_jwt:
+#                authorization_header:
+#                    enabled: true
+#                    prefix:  Bearer
+#                query_parameter:
+#                    enabled: true
+#                    name:    bearer
+
+    access_control:
+        # this is a catch-all for the admin area
+        # additional security lives in the controllers
+        - { path: ^/api/token/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/token/refresh, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/doc, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api,       roles: ROLE_USER }
+        #- { path: ^/admin, roles: ROLE_ADMIN }

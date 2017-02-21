@@ -1,0 +1,22 @@
+# src/AppBundle\Entity\Post/post.yml
+AppBundle\Entity\User:
+    user_weaverryan:
+        username: diego
+        email: 'diego@foo.com'
+        roles: ['ROLE_ADMIN', 'ROLE_USER']
+        # Lazy way of doing this: Password for "foo"
+        password: '$2a$08$Y1J2TZ6KMp7pA4MYmq4oW.S.RN8E9dXqFTUHVQtCWyTTnU37akcrW'
+    user_admin:
+        username: admin
+        email: 'admin@foo.com'
+        roles: ['ROLE_USER']
+        # Lazy way of doing this: Password for "foo"
+        password: '$2a$08$Y1J2TZ6KMp7pA4MYmq4oW.S.RN8E9dXqFTUHVQtCWyTTnU37akcrW'
+
+AppBundle\Entity\Post:
+    post_{1..50}:
+        title: <name()> <firstName()>
+        slug: <slug()>
+        content: <realText(50,2)>
+        updatedAt: <dateTime()>
+        createdAt: <dateTime()>

@@ -1,0 +1,80 @@
+# JMS Serializer
+jms_serializer:
+    handlers:
+        datetime: []
+    metadata:
+        auto_detection: true
+# FOS Rest
+fos_rest:
+     format_listener:
+         rules:
+             - { path: '^/api', priorities: ['json'], fallback_format: json, prefer_extension: false }
+             - { path: '^/', priorities: ['html'], fallback_format: html, prefer_extension: false }
+     view:
+         view_response_listener: force
+         formats:
+             json: true
+             xml:  false
+     routing_loader:
+         default_format: json
+     serializer:
+         serialize_null: true
+     param_fetcher_listener: true
+     body_listener: true
+     access_denied_listener:
+         json: true
+
+dms_filter:
+    auto_filter_forms: false
+
+nelmio_api_doc:
+    name:                 'API Name'
+    exclude_sections:     []
+    default_sections_opened:  true
+    cache:
+        enabled:              true
+        file:                 '%kernel.cache_dir%/api-doc.cache'
+    sandbox:
+            authentication:             # default is `~` (`null`), if set, the sandbox automatically
+                                        # send authenticated requests using the configured `delivery`
+
+                name: access_token      # access token name or query parameter name or header name
+
+                delivery: http          # `query`, `http`, and `header` are supported
+
+                # Required if http delivery is selected.
+                type:     bearer         # `basic`, `bearer` are supported
+
+                custom_endpoint: true   # default is `false`, if `true`, your user will be able to
+                                        # specify its own endpoint
+
+            enabled:  true              # default is `true`, you can set this parameter to `false`
+                                        # to disable the sandbox
+
+            endpoint: http://sf3/     # default is `/app_dev.php`, use this parameter
+                                                    # to define which URL to call through the sandbox
+
+            accept_type: application/json           # default is `~` (`null`), if set, the value is
+                                                    # automatically populated as the `Accept` header
+
+
+lexik_jwt_authentication:
+    private_key_path: '%jwt_private_key_path%'
+    public_key_path:  '%jwt_public_key_path%'
+    pass_phrase:      '%jwt_key_pass_phrase%'
+    token_ttl:        '%jwt_token_ttl%'
+
+nelmio_cors:
+    defaults:
+        allow_credentials: false
+    paths:
+        '^/api/':
+            allow_origin: ['*']
+            allow_headers: ['*']
+            allow_methods: ['POST', 'PUT', 'GET', 'DELETE']
+            max_age: 3600
+
+gesdinet_jwt_refresh_token:
+    ttl: 2592000
+    ttl_update: true
+    firewall: api
