@@ -18,3 +18,6 @@ bin/console hautelook_alice:doctrine:fixtures:load -n
 
 docker exec -it cli bin/console hautelook_alice:doctrine:fixtures:load -n 
 ```
+
+
+bin/console doctrine:generate:entities AppBundle:Product

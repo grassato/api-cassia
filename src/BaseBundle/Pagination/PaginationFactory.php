@@ -119,6 +119,48 @@ class PaginationFactory
         return $rootScope->toArray();
     }
 
+    public function createSimpleCollection(QueryBuilder $qb, Request $request, $meta = [])
+    {
+        $page = $request->query->get('page', 1);
+
+        $perPage = $request->query->get('perPage', 10);
+
+        if ($perPage < 10) {
+            $perPage = 10;
+        }
+
+        if ($page < 1) {
+            $page = 1;
+        }
+
+        $qb->setMaxResults($perPage)
+            ->setFirstResult(max($perPage * $perPage, 1))
+        ;
+
+        $adapter = new DoctrineORMAdapter($qb);
+        $pagerfanta = new Pagerfanta($adapter);
+        $pagerfanta->setCurrentPage($page);
+        $pagerfanta->setMaxPerPage($perPage);
+
+        $data = ['meta' => ['pagination'=> [] ]];
+        foreach ($pagerfanta->getCurrentPageResults() as $result) {
+            $data['data'][] = $result;
+        }
+
+        $pagination['meta'] = $data['meta'];
+
+        if (count($meta) > 0) {
+            $pagination['meta']['metas'] = $meta;
+        }
+        $pagination['data'] = $data['data'];
+        $pagination['meta']['pagination']['total'] = $pagerfanta->getNbResults();
+        $pagination['meta']['pagination']['count'] = $pagerfanta->getIterator()->count();
+        $pagination['meta']['pagination']['per_page'] = $pagerfanta->getMaxPerPage();
+        $pagination['meta']['pagination']['current_page'] = $pagerfanta->getCurrentPage();
+        $pagination['meta']['pagination']['total_pages'] = $pagerfanta->getNbPages();
+
+        return $pagination;
+    }
 
 
     /**

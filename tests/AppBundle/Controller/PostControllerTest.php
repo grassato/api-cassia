@@ -8,7 +8,6 @@
 
 namespace tests\AppBundle\Controller;
 
-
 use AppBundle\Entity\Post;
 use BaseBundle\Tests\ApiTestCase;
 use Faker\Factory;
@@ -19,13 +18,11 @@ use Symfony\Component\PropertyAccess\PropertyAccess;
  */
 class PostControllerTest extends ApiTestCase
 {
-
     protected function setUp()
     {
         parent::setUp();
 
         $this->createUser('diego');
-
     }
 
     /**
@@ -36,7 +33,7 @@ class PostControllerTest extends ApiTestCase
         $accessor = PropertyAccess::createPropertyAccessor();
         $post = new Post();
 
-        if (empty($data)){
+        if (empty($data)) {
             $data = [
                 'title' => 'Post',
                 'slug' => 'object_orienter',
@@ -72,7 +69,6 @@ class PostControllerTest extends ApiTestCase
         ]);
         $finishedData = json_decode($response->getBody(true), true);
         $this->testCREATEandPUT($response, $data, $finishedData['id']);
-
     }
 
     /**
@@ -87,7 +83,6 @@ class PostControllerTest extends ApiTestCase
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals(1, $post->getId());
         $this->asserter()->assertResponsePropertyContains($response,  'title', 'Post');
-
     }
 
     /**
@@ -95,7 +90,6 @@ class PostControllerTest extends ApiTestCase
      */
     public function testGETALL()
     {
-
         $this->createPost();
 
         $faker = Factory::create();
@@ -115,7 +109,6 @@ class PostControllerTest extends ApiTestCase
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertCount(2, $data);
         $this->assertInternalType('array', $data);
-
     }
 
     /**
@@ -140,13 +133,11 @@ class PostControllerTest extends ApiTestCase
 
 
         $this->testCREATEandPUT($response, $data, $post->getId());
-
     }
 
 
     private function testCREATEandPUT($response, $data,  $id)
     {
-
         $this->assertEquals(200, $response->getStatusCode());
         $finishedData = json_decode($response->getBody(true), true);
 
@@ -156,7 +147,7 @@ class PostControllerTest extends ApiTestCase
         // Is object ?
         $this->assertInternalType('object', $revison);
 
-        foreach ($data as $key => $value){
+        foreach ($data as $key => $value) {
 
             // This response return key inseted/updated
             $this->asserter()->assertResponsePropertyEquals($response, $key, $data[$key]);

@@ -8,7 +8,6 @@
 
 namespace tests\AppBundle\Entity;
 
-
 use AppBundle\Entity\Comment;
 use AppBundle\Entity\Post;
 use BaseBundle\Tests\AbstractEntityTest;
@@ -32,7 +31,6 @@ class CommentTest extends AbstractEntityTest
             ['id', 1],
             ['content', 'user_test'],
             ['post', $this->mockPost()],
-            ['deletedAt', new \Datetime('2015-09-09 00:00:00')] ,
             ['updatedAt', new \Datetime('2015-09-09 00:00:00')],
             ['createdAt', new \Datetime('2015-09-09 00:00:00')],
             ['version', 1],
@@ -48,7 +46,6 @@ class CommentTest extends AbstractEntityTest
             'id' => 1,
             'content' => 'salt123456',
             'post' => $this->mockPost(),
-            'deletedAt' => new \Datetime('2015-09-09 00:00:00'),
             'updatedAt' => new \Datetime('2015-09-09 00:00:00'),
             'createdAt' => new \Datetime('2015-09-09 00:00:00'),
             'version' => 2,
@@ -62,5 +59,4 @@ class CommentTest extends AbstractEntityTest
 
         return $module;
     }
-
 }

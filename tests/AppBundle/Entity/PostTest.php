@@ -2,7 +2,6 @@
 
 namespace Tests\AppBundle\Tests;
 
-
 use AppBundle\Entity\Post;
 use BaseBundle\Tests\AbstractEntityTest;
 
@@ -28,7 +27,6 @@ class PostTest extends AbstractEntityTest
             ['content', 'user_test'],
             ['slug', 'user_test'],
             ['comments', $this->mockCollection()],
-            ['deletedAt', new \Datetime('2015-09-09 00:00:00')] ,
             ['updatedAt', new \Datetime('2015-09-09 00:00:00')],
             ['createdAt', new \Datetime('2015-09-09 00:00:00')],
             ['version', 1],
@@ -46,11 +44,9 @@ class PostTest extends AbstractEntityTest
             'slug' => 'user_test',
             'content' => 'salt123456',
             'comments' => $this->mockCollection(),
-            'deletedAt' => new \Datetime('2015-09-09 00:00:00'),
             'updatedAt' => new \Datetime('2015-09-09 00:00:00'),
             'createdAt' => new \Datetime('2015-09-09 00:00:00'),
             'version' => 2,
         ];
     }
-
 }

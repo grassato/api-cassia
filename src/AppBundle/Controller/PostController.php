@@ -7,8 +7,13 @@ use AppBundle\Entity\Post;
 use BaseBundle\Api\ApiProblemException;
 use BaseBundle\Controller\BaseController;
 use FOS\RestBundle\Controller\Annotations as FOSRest;
+use Hateoas\HateoasBuilder;
+use Hateoas\Representation\CollectionRepresentation;
+use Hateoas\Representation\Factory\PagerfantaFactory;
+use Hateoas\Representation\PaginatedRepresentation;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\PropertyAccess\PropertyAccess;
 
 class PostController extends BaseController
 {
@@ -49,9 +54,17 @@ class PostController extends BaseController
          */
         $entity = $this->getManager()->fetch($id);
 
-        $entity->setTitle($entityObjet->getTitle());
-        $entity->setContent($entityObjet->getContent());
-        $entity->setSlug($entityObjet->getSlug());
+//        $entity->setTitle($entityObjet->getTitle());
+//        $entity->setContent($entityObjet->getContent());
+//        $entity->setSlug($entityObjet->getSlug());
+
+        $accessor = PropertyAccess::createPropertyAccessor();
+
+        foreach ($entityObjet->toArray() as $key => $value) {
+            if (!in_array($key, ['id', 'createdAt', 'updatedAt', 'comments', 'version'])) {
+                $accessor->setValue($entity, $key, $value);
+            }
+        }
 
         $this->getManager()->merge($entity, $id);
 
@@ -95,8 +108,6 @@ class PostController extends BaseController
 
         $post = $this->getManager()->save($entityObjet);
 
-        $post = $this->getFractalData($post, $this->getTransformer(), 'comment');
-
         return $post;
     }
 
@@ -118,10 +129,11 @@ class PostController extends BaseController
      */
     public function getAction($id)
     {
-        $post = $this->getManager()->fetch($id);
-
-        $collection = $this->getFractalData($post, $this->getTransformer(), 'comment');
-        return $collection;
+        /**
+         * @var $entity Post
+         */
+        $entity = $this->getManager()->fetch($id);
+        return $entity;
     }
 
     /**
@@ -151,24 +163,12 @@ class PostController extends BaseController
      */
     public function cgetAction(Request $request)
     {
-
-        $message = \Swift_Message::newInstance()
-            ->setSubject('Hello Email')
-            ->setFrom('send@example.com')
-            ->setTo('recipient@example.com')
-            ->setBody("Nika veio")
-
-        ;
-        $this->get('mailer')->send($message);
-
         $filtro['sort'] = $this->sanitizaCampoDeOrdenacao($request->query->get('sort', ''));
         $qb = $this->getManager()->getRepo()->getPostQueryBuilder($filtro, false);
 
         $paginador = $this->get('api_pagination_factory');
-        $paginatedCollection = $paginador
-            ->createORMCollection($qb, $request, 'get_posts', $this->getTransformer());
 
-        $collection = $paginador->collection($paginatedCollection, 'posts', ['comment' ], ['dtux' => 'lindo']);
+        $collection = $paginador->createSimpleCollection($qb, $request);
 
         $response = $this->createApiResponse($collection);
 

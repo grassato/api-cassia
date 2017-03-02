@@ -8,3 +8,5 @@ action.edit: Edit
 action.delete: Delete
 post.deleted_successfully: Post deletado com sucesso
 post.deleted_fail: Falha ao remove um post
+user.username: User username
+user.password: User password

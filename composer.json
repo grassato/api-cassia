@@ -64,7 +64,8 @@
         "predis/predis": "^1.0",
         "league/fractal": "^0.13.0",
         "pagerfanta/pagerfanta": "^1.0",
-        "gesdinet/jwt-refresh-token-bundle": "^0.2.0"
+        "gesdinet/jwt-refresh-token-bundle": "^0.2.0",
+        "willdurand/hateoas-bundle": "^1.2"
 
     },
     "require-dev": {

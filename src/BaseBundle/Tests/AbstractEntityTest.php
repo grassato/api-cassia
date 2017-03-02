@@ -2,13 +2,19 @@
 namespace BaseBundle\Tests;
 
 use BaseBundle\Entity\EntityTrait;
-use Symfony\Component\PropertyAccess\PropertyAccess;
+use DMS\Filter\Filter;
+use DMS\Filter\Filters\Loader\FilterLoader;
+use DMS\Filter\Mapping;
+use Doctrine\Common\Annotations;
 
 /**
  * Class AbstractEntityTest.
  */
 abstract class AbstractEntityTest extends \PHPUnit_Framework_TestCase
 {
+    protected $filter;
+    protected $loader;
+
     abstract public function entityClass();
 
     public function testClassExist()
@@ -48,7 +54,7 @@ abstract class AbstractEntityTest extends \PHPUnit_Framework_TestCase
 
     protected function setup()
     {
-        $this->prophet = new \Prophecy\Prophet();
+        $this->filter = new Filter($this->buildMetadataFactory(), new FilterLoader());
         parent::setup();
     }
 
@@ -70,11 +76,11 @@ abstract class AbstractEntityTest extends \PHPUnit_Framework_TestCase
     {
         $entity = $this->entityClass();
 
-       // $entity->exchangeArray($this->dataArrayCollection());
-        $accessor = PropertyAccess::createPropertyAccessor();
-        foreach ($this->dataArrayCollection() as $key => $value) {
-            $accessor->setValue($entity, $key, $value);
-        }
+        $entity->exchangeArray($this->dataArrayCollection());
+//        $accessor = PropertyAccess::createPropertyAccessor();
+//        foreach ($this->dataArrayCollection() as $key => $value) {
+//            $accessor->setValue($entity, $key, $value);
+//        }
 
         $expected = $entity->getArrayCopy();
         $expectedArray = $entity->toArray();
@@ -135,7 +141,20 @@ abstract class AbstractEntityTest extends \PHPUnit_Framework_TestCase
             }
         }
         \Mockery::close();
-        //$this->prophet->checkPredictions();
         parent::tearDown();
+    }
+
+    protected function buildMetadataFactory()
+    {
+        $reader = new Annotations\AnnotationReader();
+        $loader = new Mapping\Loader\AnnotationLoader($reader);
+        $this->loader = $loader;
+        $metadataFactory = new Mapping\ClassMetadataFactory($loader);
+        return $metadataFactory;
+    }
+
+    public function testGetMetadataFactory()
+    {
+        $this->assertInstanceOf('DMS\Filter\Mapping\ClassMetadataFactory', $this->buildMetadataFactory());
     }
 }

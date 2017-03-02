@@ -9,6 +9,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use DMS\Filter\Rules as Filter;
 use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation as Serializer;
+use Hateoas\Configuration\Annotation as Hateoas;
 
 /**
  * @ORM\Entity(repositoryClass="AppBundle\Entity\Repository\PostRepository")
@@ -35,7 +36,7 @@ class Post
     protected $title;
 
     /**
-     * @Gedmo\Slug(fields={"slug"}, updatable=false, separator="_")
+     * @Gedmo\Slug(fields={"slug"}, updatable=true, separator="_")
      * @ORM\Column(type="string")
      * @Assert\NotBlank(message="Not null")
      * @Assert\Length(

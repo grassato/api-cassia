@@ -1,0 +1,26 @@
+# src/AppBundle\Entity\Category
+AppBundle\Entity\Category:
+    marmita_1:
+        name: <text(100)>
+        updatedAt: <datetimeBetween('-5 days', 'now')>
+        createdAt: <datetimeBetween('-5 days', 'now')>
+
+    marmita_2:
+        name: <text(100)>
+        updatedAt: <datetimeBetween('-5 days', 'now')>
+        createdAt: <datetimeBetween('-5 days', 'now')>
+
+    marmita_3:
+        name: <text(100)>
+        updatedAt: <datetimeBetween('-5 days', 'now')>
+        createdAt: <datetimeBetween('-5 days', 'now')>
+
+    marmita_drinks:
+        name: <text(100)>
+        updatedAt: <datetimeBetween('-5 days', 'now')>
+        createdAt: <datetimeBetween('-5 days', 'now')>
+
+    marmita_accompaniment:
+        name: <text(100)>
+        updatedAt: <datetimeBetween('-5 days', 'now')>
+        createdAt: <datetimeBetween('-5 days', 'now')>

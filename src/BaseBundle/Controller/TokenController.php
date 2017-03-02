@@ -33,8 +33,8 @@ class TokenController extends Controller
      *  parameters={
      *  },
      *  parameters={
-     *      {"name"="username", "dataType"="string", "required"=true, "description"="User username"},
-     *      {"name"="password", "dataType"="string", "required"=true, "description"="User password"},
+     *      {"name"="username", "dataType"="string", "required"=true, "description"="user.username"},
+     *      {"name"="password", "dataType"="string", "required"=true, "description"="user.password"},
      *  },
      * statusCodes={
      *         200="Returned when successful",

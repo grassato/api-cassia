@@ -24,6 +24,7 @@ class AppKernel extends Kernel
             new Gesdinet\JWTRefreshTokenBundle\GesdinetJWTRefreshTokenBundle(),
             new Nelmio\CorsBundle\NelmioCorsBundle(),
             new DMS\Bundle\FilterBundle\DMSFilterBundle(),
+            new Bazinga\Bundle\HateoasBundle\BazingaHateoasBundle(),
             new BaseBundle\BaseBundle(),
             new AppBundle\AppBundle(),
         ];
@@ -73,16 +74,12 @@ class AppKernel extends Kernel
             }
         });
 
-        if(file_exists("../.env")) {
-
+        if (file_exists("../.env")) {
             (new Dotenv(__DIR__.'/../'))->load();
             $envParameters = $this->getEnvParameters();
-            $loader->load(function($container) use($envParameters) {
+            $loader->load(function ($container) use ($envParameters) {
                 $container->getParameterBag()->add($envParameters);
             });
         }
-
     }
-
-
 }
