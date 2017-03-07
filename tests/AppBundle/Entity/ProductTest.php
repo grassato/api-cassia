@@ -24,8 +24,8 @@ class ProductTest extends AbstractEntityTest
     {
         return [
             ['id', 1],
-            ['name', ' prod1 <br>'],
-            ['price', 1],
+            ['name', 'Marmita de frango </br>'],
+            ['price', 10],
             ['category', $this->mockCategory()],
             ['updatedAt', new \Datetime('2015-09-09 00:00:00')],
             ['createdAt', new \Datetime('2015-09-09 00:00:00')],
@@ -33,6 +33,31 @@ class ProductTest extends AbstractEntityTest
         ];
     }
 
+
+    /**
+     * {@inheritdoc}
+     */
+    public function dataArrayCollection()
+    {
+        return [
+            'id' => 2,
+            'name' => ' Marmita de 
+              carne <script><p>',
+            'price' => 2,
+            'category' => $this->mockCategory(),
+            'updatedAt' => new \Datetime('2015-09-09 00:00:00'),
+            'createdAt' => new \Datetime('2015-09-09 00:00:00'),
+            'version' => 2,
+        ];
+    }
+
+    protected function mockCategory()
+    {
+        $module = \Mockery::mock(Category::class)
+            ->shouldIgnoreMissing();
+
+        return $module;
+    }
 
     public function testCheckCleanHtmlAndStripTags()
     {
@@ -48,29 +73,5 @@ class ProductTest extends AbstractEntityTest
         $this->assertNotContains("<p>", $class->getName());
 
         $this->assertNotEquals($classClone->getName(), $class->getName());
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function dataArrayCollection()
-    {
-        return [
-            'id' => 1,
-            'name' => 'prod2 <script><p>',
-            'price' => 2,
-            'category' => $this->mockCategory(),
-            'updatedAt' => new \Datetime('2015-09-09 00:00:00'),
-            'createdAt' => new \Datetime('2015-09-09 00:00:00'),
-            'version' => 2,
-        ];
-    }
-
-    protected function mockCategory()
-    {
-        $module = \Mockery::mock(Category::class)
-            ->shouldIgnoreMissing();
-
-        return $module;
     }
 }

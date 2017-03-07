@@ -36,11 +36,7 @@ class Category
     protected $name;
 
     /**
-     * @ORM\OneToMany(
-     *     targetEntity="Product",
-     *     mappedBy="category",
-     *     cascade={"persist"}
-     *     )
+     * @ORM\OneToMany(targetEntity="Product", mappedBy="category", cascade={"persist"}, orphanRemoval=true)
      */
     protected $products;
 
@@ -50,23 +46,60 @@ class Category
     }
 
     /**
+     * Set name
+     *
+     * @param string $name
+     *
+     * @return Category
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Get name
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Add product
+     *
      * @param \AppBundle\Entity\Product $product
      *
-     * Check if product exits in this object
-     * @return bool
+     * @return Category
      */
-    public function hasProduct(\AppBundle\Entity\Product $product)
+    public function addProduct(\AppBundle\Entity\Product $product)
     {
-        $test =
-            function ($key, $element) use ($product) {
-                if ($element->getId() === $product->getId()) {
-                    return true;
-                }
+        $this->products[] = $product;
 
-                return false;
-            }
-        ;
+        return $this;
+    }
 
-        return $this->products->exists($test);
+    /**
+     * Remove product
+     *
+     * @param \AppBundle\Entity\Product $product
+     */
+    public function removeProduct(\AppBundle\Entity\Product $product)
+    {
+        $this->products->removeElement($product);
+    }
+
+    /**
+     * Get products
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getProducts()
+    {
+        return $this->products;
     }
 }

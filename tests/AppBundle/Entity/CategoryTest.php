@@ -5,8 +5,6 @@ namespace Tests\AppBundle\Tests;
 use AppBundle\Entity\Category;
 use AppBundle\Entity\Product;
 use BaseBundle\Tests\AbstractEntityTest;
-use Doctrine\Common\Collections\ArrayCollection;
-use Hautelook\AliceBundle\Tests\Functional\TestBundle\Entity\Prod;
 
 class CategoryTest extends AbstractEntityTest
 {
@@ -26,10 +24,10 @@ class CategoryTest extends AbstractEntityTest
     {
         return [
             ['id', 1],
-            ['name', ' Category <br>'],
+            ['name', ' Refrigerante <br> <script>'],
             ['updatedAt', new \Datetime('2015-09-09 00:00:00')],
             ['createdAt', new \Datetime('2015-09-09 00:00:00')],
-            ['version', 1],
+            ['version', 1]
         ];
     }
 
@@ -45,11 +43,10 @@ class CategoryTest extends AbstractEntityTest
         $this->filter->filterEntity($class);
 
         $this->assertNotContains("<script>", $class->getName());
-        $this->assertNotContains("<p>", $class->getName());
+        $this->assertNotContains("<br>", $class->getName());
 
         $this->assertNotEquals($classClone->getName(), $class->getName());
     }
-
 
     /**
      * {@inheritdoc}
@@ -58,19 +55,11 @@ class CategoryTest extends AbstractEntityTest
     {
         return [
             'id' => 1,
-            'name' => 'Category <script><p>',
+            'name' => 'Suco <script><p>',
             'products' => $this->mockCollection(),
             'updatedAt' => new \Datetime('2015-09-09 00:00:00'),
             'createdAt' => new \Datetime('2015-09-09 00:00:00'),
             'version' => 2,
         ];
-    }
-
-    protected function mockProduct()
-    {
-        $module = \Mockery::mock(Product::class)
-            ->shouldIgnoreMissing();
-
-        return $module;
     }
 }

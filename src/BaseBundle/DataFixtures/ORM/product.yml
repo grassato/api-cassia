@@ -2,36 +2,35 @@
 AppBundle\Entity\Product:
     product_1:
         name: <text(100)>
-        value:  <numberBetween(10, 999)>
-        category: "@marmita_drinks"
+        price:  <numberBetween(10, 999)>
+        category: '@marmita_1'
         updatedAt: <datetimeBetween('-5 days', 'now')>
         createdAt: <datetimeBetween('-5 days', 'now')>
 
     product_2:
         name: <text(100)>
-        value:  <numberBetween(10, 999)>
-        category: "@marmita_accompaniment"
+        price:  <numberBetween(10, 999)>
+        category: '@marmita_2'
         updatedAt: <datetimeBetween('-5 days', 'now')>
         createdAt: <datetimeBetween('-5 days', 'now')>
 
     product_{3..20}:
         name: <text(100)>
-        value:  <numberBetween(10, 999)>
-        category: "@marmita_1"
+        price:  <numberBetween(10, 999)>
+        category: '@marmita_3'
         updatedAt: <datetimeBetween('-5 days', 'now')>
         createdAt: <datetimeBetween('-5 days', 'now')>
 
     product_{21..40}:
         name: <text(100)>
-        value:  <numberBetween(10, 999)>
-        category: "@marmita_2"
+        price:  <numberBetween(10, 999)>
+        category: '@marmita_drinks'
         updatedAt: <datetimeBetween('-5 days', 'now')>
         createdAt: <datetimeBetween('-5 days', 'now')>
 
-
     product_{41..60}:
         name: <text(100)>
-        value:  <numberBetween(10, 999)>
-        category: "@marmita_3"
+        price:  <numberBetween(10, 999)>
+        category: '@marmita_accompaniment'
         updatedAt: <datetimeBetween('-5 days', 'now')>
         createdAt: <datetimeBetween('-5 days', 'now')>
