@@ -13,15 +13,15 @@ use Symfony\Component\HttpFoundation\Request;
 
 // This check prevents access to debug front controllers that are deployed by accident to production servers.
 // Feel free to remove this, extend it, or make something more sophisticated.
-$whiteListedAddresses = ['10.10.10.20','127.0.0.1','fe80::1', '::1'];
-if ($dockerBridgeIp = getenv('DOCKER_BRIDGE_IP')) {
-    $whiteListedAddresses[] = $dockerBridgeIp;
-}
-
-if (!(in_array(@$_SERVER['REMOTE_ADDR'], $whiteListedAddresses))) {
-    header('HTTP/1.0 403 Forbidden');
-    exit('You are not allowed to access this file. Check '.basename(__FILE__).' for more information.');
-}
+//$whiteListedAddresses = ['10.10.10.20','127.0.0.1','fe80::1', '::1'];
+//if ($dockerBridgeIp = getenv('DOCKER_BRIDGE_IP')) {
+//    $whiteListedAddresses[] = $dockerBridgeIp;
+//}
+//
+//if (!(in_array(@$_SERVER['REMOTE_ADDR'], $whiteListedAddresses))) {
+//    header('HTTP/1.0 403 Forbidden');
+//    exit('You are not allowed to access this file. Check '.basename(__FILE__).' for more information.');
+//}
 
 /** @var \Composer\Autoload\ClassLoader $loader */
 $loader = require __DIR__.'/../app/autoload.php';

@@ -7,8 +7,9 @@ Copy distributive docker-composer.yml.dist to docker-composer.yml
 
 ```bash
 
-  cp docs/docker-composer.yml docker-composer.yml
+  cp docker-composer.yml.dist docker-composer.yml
   cp .env.example .env
+  
 
 ```
 
@@ -18,8 +19,12 @@ Modify your application path(SYMFONY_APP_PATH) in .env, and more informations.
 #### Run docker:
 
 ```bash
-
-  docker-composer up -d
+  pwd
+  vi .env
+  # Modify SYMFONY_APP_PATH variable
+  
+  docker-compose -f docker-compose pull
+  docker-compose up -d
 
 ```
 
@@ -56,11 +61,7 @@ Modify your application path(SYMFONY_APP_PATH) in .env, and more informations.
 ```bash
 
   docker exec -it sf_cli bash
-  bin/run.sh
-
-  or
-
-  docker exec -it sf_cli bin/run.sh
+  sf-reload-all
 
 ```
 

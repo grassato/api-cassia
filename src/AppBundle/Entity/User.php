@@ -10,7 +10,7 @@ use JMS\Serializer\Annotation as Serializer;
 
 /**
  * @ORM\Entity(repositoryClass="AppBundle\Entity\Repository\UserRepository")
- * @ORM\Table(name="user")
+ * @ORM\Table(name="user", schema="users")
  * @Serializer\ExclusionPolicy("all")
  */
 class User implements UserInterface, \Serializable, EquatableInterface

@@ -1,0 +1,194 @@
+version: '3.0'
+networks:
+  development:
+    driver: bridge
+    ipam:
+      config:
+       - subnet: 10.10.10.0/24
+
+#volumes:
+#  sf-unison-sync:
+#    external: true
+
+services:
+    cli:
+        image: diegograssato/cli
+        container_name: cli
+        tty: true
+        volumes:
+            - ${SYMFONY_APP_PATH}:${SYMFONY_SERVER_APP_PATH}
+#           - sf-unison-sync:/var/www/html:rw # Replace volume to this to use docker-sync for macOS users
+        working_dir: ${SYMFONY_SERVER_APP_PATH}
+        environment:
+            CLI_SYMFONY_DEV: "true"
+            CLI_CS: "true"
+            CLI_SONAR: "false"
+            SYMFONY_SERVER_APP_PATH: ${SYMFONY_SERVER_APP_PATH}
+        networks:
+          development:
+        restart: always
+
+    php:
+        image: diegograssato/php7-alpine:v1.0
+        #container_name: php
+        volumes:
+            - ${SYMFONY_APP_PATH}:${SYMFONY_SERVER_APP_PATH}
+#           - sf-unison-sync:/var/www/html:rw # Replace volume to this to use docker-sync for macOS users
+        environment:
+             PHP_XDEBUG_ENABLE: "off"
+             PHP_XDEBUG_IDE_KEY: "PHPSTORM"
+             PHP_XDEBUG_PROFILER_ENABLE: "off"
+             PHP_XDEBUG_PROFILER_OUTPUT_DIR: "/tmp/profile"
+             PHP_XDEBUG_PROFILER_OUTPUT_NAME: "dtux.out.%p"
+             PHP_XDEBUG_REMOTE_LOG: "/tmp/php-dtux.log"
+             PHP_XDEBUG_PORT: "9000"
+             PHP_XDEBUG_REMOTE_IP: "10.10.10.1"
+             PHP_XDEBUG_REMOTE_LOG_ENABLE: "off"
+             PHP_PRODUCTION: "false"
+             PHP_FPM_PORT: 5000
+             PHP_OPCACHE_ENABLE: "true"
+        deploy:
+          mode: replicated
+          replicas: 1
+          labels: [APP=PHP]
+        networks:
+          development:
+        restart: always
+
+    nginx:
+        image: diegograssato/nginx
+#        ports:
+#            - 80:80
+#            - 443:443
+        volumes:
+            - ${SYMFONY_APP_PATH}:${SYMFONY_SERVER_APP_PATH}
+#           - sf-unison-sync:/var/www/html:rw # Replace volume to this to use docker-sync for macOS users
+        environment:
+            PHP_FPM_SOCKET: "php:5000"
+            NGINX_WORKER_PROCESSES: 4
+            NGINX_CONNECTIONS: 40960 # 4 * 512 * 10
+            NGINX_DOCUMENT_ROOT: "${SYMFONY_SERVER_APP_PATH}/"
+            APP_INDEX_FILE: 'app_dev.php'
+            VIRTUAL_HOST_CONFIG: "{'name':'sf3','domains':['sf3','sf3.local','cassia.local'],'docroot':'web', 'forcessl': 'false', 'model': 'symfony'}"
+            VIRTUAL_HOST: "*.local.jjconsumer.com, *.local"
+        deploy:
+          mode: replicated
+          replicas: 2
+          labels: [APP=WEB]
+        networks:
+          development:
+        restart: always
+
+    mailcatcher:
+        image: diegograssato/mailcatcher:v1
+        container_name: ${SYMFONY__MAILER_HOST}
+        expose:
+          - ${SYMFONY__MAILER_PORT}
+          - 1080
+        ports:
+          - 1080:1080
+        environment:
+          SMTP_PORT: ${SYMFONY__MAILER_PORT}
+          HTTP_PORT: 1080
+        networks:
+          development:
+        restart: always
+
+    mysql:
+        image: mariadb:5.5.54 # use 10.1.21 or 5.5.54
+        container_name: "mysql_${SYMFONY__DATABASE_HOST}"
+        volumes:
+          - ${SYMFONY_APP_PATH}/var/data/mysql/.${SYMFONY__DATABASE_HOST}:/var/lib/mysql  # Mapping for custom mysql database folder.
+        expose:
+            - "3306"
+        ports:
+            - "3307:3306"
+        environment:
+            MYSQL_ROOT_PASSWORD: ${SYMFONY__DATABASE_ROOT_PASSWORD}
+            MYSQL_DATABASE: ${SYMFONY__DATABASE_NAME}
+            MYSQL_USER: ${SYMFONY__DATABASE_USER}
+            MYSQL_PASSWORD: ${SYMFONY__DATABASE_PASSWORD}
+        deploy:
+          mode: replicated
+          replicas: 2
+          labels: [APP=DB]
+        networks:
+          development:
+            ipv4_address: 10.10.10.30
+        restart: always
+
+    postgres:
+        image: postgres:9.6.2-alpine
+        container_name: ${SYMFONY__DATABASE_HOST}
+        restart: always
+        volumes:
+          - /etc/localtime:/etc/localtime:ro
+        environment:
+            POSTGRES_DB: ${SYMFONY__DATABASE_NAME}
+            POSTGRES_USER: ${SYMFONY__DATABASE_USER}
+            POSTGRES_PASSWORD: ${SYMFONY__DATABASE_PASSWORD}
+        networks:
+          development:
+             ipv4_address: 10.10.10.100
+
+    phpmyadmin:
+        container_name: ${SYMFONY__DATABASE_HOST}_admin
+        image: phpmyadmin/phpmyadmin
+        links:
+            - mysql
+        ports:
+            - 8001:80
+        environment:
+            MYSQL_USERNAME: root
+            MYSQL_ROOT_PASSWORD: ${SYMFONY__DATABASE_ROOT_PASSWORD}
+            PMA_ARBITRARY: 1
+            PMA_HOST: ${SYMFONY__DATABASE_HOST}
+            PMA_PORT: ${SYMFONY__DATABASE_PORT}
+            PMA_USER: root
+            PMA_PASSWORD: ${SYMFONY__DATABASE_ROOT_PASSWORD}
+            PHP_UPLOAD_MAX_FILESIZE: 1G
+            PHP_MAX_INPUT_VARS: 1G
+        networks:
+          development:
+        restart: always
+
+    redis:
+        image: redis:alpine
+        container_name: redis
+        environment:
+          SHARED: 'true'
+          MEMORY: 'false'
+        ports:
+            - "6379:6379"
+        networks:
+          development:
+        restart: always
+
+    # Nginx LoadBalancer
+    lb:
+      image: jwilder/nginx-proxy
+      container_name: lb
+      links:
+        - nginx
+      volumes:
+       - /var/run/docker.sock:/tmp/docker.sock:ro
+      ports:
+       - "80:80"
+       - "443:443"
+      networks:
+        development:
+          ipv4_address: 10.10.10.20
+      restart: always
+
+    lb_php:
+      image: dockercloud/haproxy
+      links:
+        - php
+      volumes:
+        - /var/run/docker.sock:/var/run/docker.sock
+      ports:
+        - 500:500
+      networks:
+        development:
+            ipv4_address: 10.10.10.10
+      restart: always

@@ -50,7 +50,7 @@ monolog:
 #        charset: "UTF8"
 doctrine:
     dbal:
-        driver:   pdo_mysql
+        driver:   "%database_drive%"
         host:     "%database_host%"
         port:     "%database_port%"
         dbname:   "%database_name%"

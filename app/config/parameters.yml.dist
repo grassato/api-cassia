@@ -1,9 +1,4 @@
 parameters:
-    database_host: '%env(SYMFONY__DATABASE_HOST)%'
-    database_port: '%env(SYMFONY__DATABASE_PORT)%'
-    database_name: '%env(SYMFONY__DATABASE_NAME)%'
-    database_user: '%env(SYMFONY__DATABASE_USER)%'
-    database_password: '%env(SYMFONY__DATABASE_ROOT_PASSWORD)%'
     mailer_transport: smtp
     mailer_host: 127.0.0.1
     mailer_user: null
