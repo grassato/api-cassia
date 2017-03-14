@@ -8,6 +8,7 @@ use BaseBundle\Transformer\CustomSerializer;
 use BaseBundle\Transformer\Transformer;
 use JMS\Serializer\SerializationContext;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+Use FOS\RestBundle\Controller\FOSRestController;
 use Symfony\Component\CssSelector\Exception\InternalErrorException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,7 +21,7 @@ use Pagerfanta\Adapter\MongoAdapter;
 use Pagerfanta\Pagerfanta;
 use League\Fractal\Pagination\PagerfantaPaginatorAdapter;
 
-abstract class BaseController extends Controller
+abstract class BaseController extends FOSRestController
 {
     /**
      * This method should return default manager.
@@ -46,7 +47,8 @@ abstract class BaseController extends Controller
      * @abstract
      * @return Transformer
      */
-    abstract protected function getTransformer();
+    //abstract protected function getTransformer();
+
     /**
      * @return Fractal\Manager
      */
@@ -266,7 +268,7 @@ abstract class BaseController extends Controller
     }
 
     /**
-     * Método responsável por parsear o campo de ordenação de string para array.
+     * Método responsável por parsear o field de ordenação de string para array.
      *
      * @param string $sort no formato: '-titulo,+criadoEm' para ordenar por: 'ORDER BY titulo DESC, criadoEm ASC'.
      * @return array com os filtros no formato:
@@ -277,26 +279,26 @@ abstract class BaseController extends Controller
      * )
      * </code>
      */
-    protected function sanitizaCampoDeOrdenacao($sort = '')
+    protected function sanitizeDirectionFields($sort = '')
     {
         $ret = [];
-        $camposDaOrdenacao = explode(',', $sort);
+        $fields = explode(',', $sort);
 
-        foreach ($camposDaOrdenacao as $campo) {
-            if (empty($campo)) {
+        foreach ($fields as $field) {
+            if (empty($field)) {
                 continue;
             }
 
             $sort = [];
 
-            if (0 === strpos($campo, '-')) {
-                $sort['field'] = trim(substr($campo, 1));
+            if (0 === strpos($field, '-')) {
+                $sort['field'] = trim(substr($field, 1));
                 $sort['direction'] = 'DESC';
-            } elseif (0 === strpos($campo, '+')) {
-                $sort['field'] = trim(substr($campo, 1));
+            } elseif (0 === strpos($field, '+')) {
+                $sort['field'] = trim(substr($field, 1));
                 $sort['direction'] = 'ASC';
             } else {
-                $sort['field'] = trim($campo);
+                $sort['field'] = trim($field);
                 $sort['direction'] = 'ASC';
             }
 

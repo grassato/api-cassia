@@ -163,8 +163,8 @@ class PostController extends BaseController
      */
     public function cgetAction(Request $request)
     {
-        $filtro['sort'] = $this->sanitizaCampoDeOrdenacao($request->query->get('sort', ''));
-        $qb = $this->getManager()->getRepo()->getPostQueryBuilder($filtro, false);
+        $filtro['sort'] = $this->sanitizeDirectionFields($request->query->get('sort', ''));
+        $qb = $this->getManager()->getRepo()->getQueryBuilder($filtro, false);
 
         $paginador = $this->get('api_pagination_factory');
 

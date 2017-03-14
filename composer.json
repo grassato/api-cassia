@@ -84,7 +84,8 @@
         "phpmd/phpmd": "^2.5",
         "doctrine/doctrine-fixtures-bundle": "^2.3",
         "phploc/phploc": "^3.0",
-        "theseer/phpdox": "^0.9.0"
+        "theseer/phpdox": "^0.9.0",
+        "phpstan/phpstan": "^0.6.4"
     },
     "scripts": {
         "symfony-scripts": [
