@@ -3,13 +3,13 @@ Symfony3 + Dotenv + Docker
 
 #### Running application:
 
-Copy distributive docker-composer.yml.dist to docker-composer.yml
+Copy distributive docker-compose.yml.dist to docker-compose.yml
 
 ```bash
 
-  cp docker-composer.yml.dist docker-composer.yml
+  cp docker-compose.yml.dist docker-compose.yml
   cp .env.example .env
-  
+
 
 ```
 
@@ -22,9 +22,9 @@ Modify your application path(SYMFONY_APP_PATH) in .env, and more informations.
   pwd
   vi .env
   # Modify SYMFONY_APP_PATH variable
-  
-  docker-compose -f docker-compose pull
-  docker-compose up -d
+
+  docker-compose -f docker-compose.yml pull
+  docker-compose -f docker-compose.yml up -d
 
 ```
 
@@ -35,9 +35,10 @@ Modify your application path(SYMFONY_APP_PATH) in .env, and more informations.
   docker exec -it cli bash
   -> /var/www/html
 
+ composer install
  bin/console doctrine:database:create
- bin/console doctrine:schema:update --force 
- 
+ bin/console doctrine:schema:update --force
+
 
 ```
 
@@ -78,9 +79,9 @@ docker exec -it sf_cli bin/console hautelook_alice:doctrine:fixtures:load -n
 
 
 ```
- 
+
 ### Generate JWT Token
- 
+
 ```
 
   mkdir -p var/jwt # For Symfony3+, no need of the -p option
@@ -107,5 +108,3 @@ docker exec -it sf_cli bin/console hautelook_alice:doctrine:fixtures:load -n
 **Mail View - Port 1080**
 
 **PHPMYADMIN - Admin mysql - 8080**
-
- 
