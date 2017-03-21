@@ -207,7 +207,7 @@ class PostController extends BaseController
      *
      * @return ObjectManager
      */
-    protected function getEntiyClass()
+    protected function getEntityClass()
     {
         return Post::class;
     }

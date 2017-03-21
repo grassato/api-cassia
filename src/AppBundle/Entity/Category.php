@@ -11,9 +11,10 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation as Serializer;
 
 /**
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\Repository\CategoryRepository")
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="category")
+ * @Serializer\ExclusionPolicy("all")
  */
 class Category
 {
@@ -31,7 +32,7 @@ class Category
      * @Filter\StripTags()
      * @Filter\Trim()
      * @Filter\StripNewlines()
-
+     * @Serializer\Expose()
      */
     protected $name;
 

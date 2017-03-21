@@ -31,7 +31,7 @@ class Product
      * @Filter\StripTags()
      * @Filter\Trim()
      * @Filter\StripNewlines()
-
+     * @Serializer\Expose()
      */
     protected $name;
 
@@ -41,11 +41,13 @@ class Product
      * @Filter\StripTags()
      * @Filter\Trim()
      * @Filter\StripNewlines()
+     * @Serializer\Expose()
      */
     protected $price;
 
     /**
      * @ORM\ManyToOne(targetEntity="Category", cascade={"persist"}, inversedBy="products")
+     * @Serializer\Expose()
      */
     protected $category;
 

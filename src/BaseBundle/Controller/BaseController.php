@@ -40,7 +40,7 @@ abstract class BaseController extends FOSRestController
      *
      * @return getEntiyClass
      */
-    abstract protected function getEntiyClass();
+    abstract protected function getEntityClass();
 
     /**
      * This method should return the default transform.
@@ -312,7 +312,7 @@ abstract class BaseController extends FOSRestController
 
     protected function createApiResponse($data, $serializerGroups = [], $statusCode = 200)
     {
-        $json = $this->serialize($data);
+        $json = $this->serialize($data, $serializerGroups);
 
         return new Response($json, $statusCode, array(
             'Content-Type' => 'application/json'
