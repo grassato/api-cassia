@@ -8,7 +8,14 @@ services:
         - '@doctrine.orm.entity_manager'
       tags:
           - { name: monolog.logger, channel: leads }
-
+    product.manager:
+      class: AppBundle\Manager\ProductManager
+      arguments:
+        - '@doctrine.orm.entity_manager'
+    category.manager:
+      class: AppBundle\Manager\CategoryManager
+      arguments:
+        - '@doctrine.orm.entity_manager'
     #### Transformadores do Fractal
     app_api.transformer.post:
         class: AppBundle\Transformer\PostTransformer

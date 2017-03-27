@@ -67,7 +67,7 @@ class CommentController extends BaseController
      *
      * @return Comment
      */
-    protected function getEntiyClass()
+    protected function getEntityClass()
     {
         return Comment::class;
     }
