@@ -35,6 +35,7 @@ class CategoryController extends BaseController
      * )
      * @FOSRest\Get("/categories/{id}", name="_category")
      * @ParamConverter("category", class="AppBundle:Category")
+     * @FOSRest\View(serializerGroups={"identify", "category-details", "product-base"})
      */
     public function getAction(Category $category)
     {
@@ -75,7 +76,9 @@ class CategoryController extends BaseController
 
         $collection = $paginador->createSimpleCollection($qb, $request);
 
-        $response = $this->createApiResponse($collection);
+        $groups = ['identify','category-summary'];
+
+        $response = $this->createApiResponse($collection, $groups);
 
         return $response;
     }
