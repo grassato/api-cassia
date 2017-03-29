@@ -36,6 +36,7 @@ class ProductController extends BaseController
      * )
      * @FOSRest\Get("/products/{id}", name="_product")
      * @ParamConverter("product", class="AppBundle:Product")
+     * @FOSRest\View(serializerGroups={"identify", "product-details", "category-summary"})
      */
     public function getAction(Product $product)
     {
@@ -75,8 +76,8 @@ class ProductController extends BaseController
         $paginador = $this->get('api_pagination_factory');
 
         $collection = $paginador->createSimpleCollection($qb, $request);
-
-        $response = $this->createApiResponse($collection);
+        $groups = ['identify','product-summary', 'category-summary'];
+        $response = $this->createApiResponse($collection, $groups);
 
         return $response;
     }

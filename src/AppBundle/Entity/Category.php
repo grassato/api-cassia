@@ -14,7 +14,6 @@ use JMS\Serializer\Annotation as Serializer;
  * @ORM\Entity(repositoryClass="AppBundle\Entity\Repository\CategoryRepository")
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="category")
- * @Serializer\ExclusionPolicy("all")
  */
 class Category
 {
@@ -32,12 +31,13 @@ class Category
      * @Filter\StripTags()
      * @Filter\Trim()
      * @Filter\StripNewlines()
-     * @Serializer\Expose()
+     * @Serializer\Groups({"category-summary", "category-details"})
      */
     protected $name;
 
     /**
      * @ORM\OneToMany(targetEntity="Product", mappedBy="category", cascade={"persist"}, orphanRemoval=true)
+     * @Serializer\Groups({"category-details"})
      */
     protected $products;
 

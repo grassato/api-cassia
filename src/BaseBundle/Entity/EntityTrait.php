@@ -20,7 +20,7 @@ trait EntityTrait
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
-     * @Serializer\Expose()
+     * @Serializer\Groups({"identify"})
      */
     protected $id;
 
@@ -51,7 +51,7 @@ trait EntityTrait
      * @ORM\Column(name="created_at", type="datetime")
      * @Gedmo\Timestampable(on="create")
      * @Assert\DateTime()
-     * @Serializer\Expose()
+     * @Serializer\Groups({"timestamp"})
      */
     protected $createdAt;
 
@@ -60,6 +60,7 @@ trait EntityTrait
      * @ORM\Column(name="updated_at", type="datetime")
      * @Gedmo\Timestampable(on="update")
      * @Assert\DateTime()
+     * @Serializer\Groups({"timestamp"})
      */
     protected $updatedAt;
 

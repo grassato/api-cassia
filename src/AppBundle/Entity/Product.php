@@ -31,7 +31,7 @@ class Product
      * @Filter\StripTags()
      * @Filter\Trim()
      * @Filter\StripNewlines()
-     * @Serializer\Expose()
+     * @Serializer\Groups({"product-details", "product-summary", "product-base"})
      */
     protected $name;
 
@@ -41,13 +41,13 @@ class Product
      * @Filter\StripTags()
      * @Filter\Trim()
      * @Filter\StripNewlines()
-     * @Serializer\Expose()
+     * @Serializer\Groups({"product-details", "product-summary"})
      */
     protected $price;
 
     /**
      * @ORM\ManyToOne(targetEntity="Category", cascade={"persist"}, inversedBy="products")
-     * @Serializer\Expose()
+     * @Serializer\Groups({"product-details", "product-summary"})
      */
     protected $category;
 
