@@ -36,7 +36,7 @@ class Category
     protected $name;
 
     /**
-     * @ORM\OneToMany(targetEntity="Product", mappedBy="category", cascade={"persist"}, orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="Product", mappedBy="category", cascade={"persist"})
      * @Serializer\Groups({"category-details"})
      */
     protected $products;

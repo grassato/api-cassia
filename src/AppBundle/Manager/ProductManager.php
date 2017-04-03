@@ -12,4 +12,21 @@ class ProductManager extends AbstractManager
     {
         parent::__construct($om, Product::class);
     }
+
+    /**
+     * @param \AppBundle\Entity\Product $project
+     *
+     * Remove tags
+     */
+    public function removeOldTags(Product $project) {
+
+        foreach ($project->getTags() as $tag) {
+
+            $project->removeTag($tag);
+            $this->getOm()->persist($project);
+        }
+
+        $this->getOm()->flush();
+    }
+
 }

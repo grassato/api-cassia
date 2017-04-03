@@ -22,3 +22,6 @@ docker-compose.yml
 .idea/*
 .php_cs.cache
 tests/report/
+*~
+*.swp
+*.swo

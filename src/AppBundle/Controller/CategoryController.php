@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 
 use AppBundle\Entity\Category;
+use AppBundle\Manager\CategoryManager;
 use BaseBundle\Api\ApiProblemException;
 use BaseBundle\Controller\BaseController;
 use FOS\RestBundle\Controller\Annotations as FOSRest;
@@ -88,7 +89,7 @@ class CategoryController extends BaseController
      *
      * @abstract
      *
-     * @return ObjectManager
+     * @return CategoryManager
      */
     public function getManager()
     {
@@ -100,7 +101,7 @@ class CategoryController extends BaseController
      *
      * @abstract
      *
-     * @return ObjectManager
+     * @return Category
      */
     protected function getEntityClass()
     {

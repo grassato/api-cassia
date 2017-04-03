@@ -102,10 +102,12 @@ abstract class BaseController extends FOSRestController
                 $context
             );
         } catch (\Exception $e) {
+
             $problem = new ApiProblem(400);
             $problem->setTitle("Invalid serializer exception.");
             $problem->setExtra(['filters' => $e]);
             throw new ApiProblemException($problem);
+
         }
 
         return $data;
@@ -118,15 +120,19 @@ abstract class BaseController extends FOSRestController
     protected function unserializeClass($content)
     {
         try {
-            $class = $this->getEntiyClass();
+
+            $class = $this->getEntityClass();
             $contentJson = $this->unserialize($content, $class, 'json');
 
             return $contentJson;
+
         } catch (\Exception $e) {
+
             $problem = new ApiProblem(400);
             $problem->setTitle("Invalid serializer class exception.");
             $problem->setExtra(['filters' => $e]);
             throw new ApiProblemException($problem);
+
         }
     }
 

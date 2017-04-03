@@ -1,9 +1,14 @@
 # JMS Serializer
 jms_serializer:
     handlers:
-        datetime: []
+        datetime:
+            default_format: "Y-m-d\\H:i:s T"
+            default_timezone: "UTC"
     metadata:
         auto_detection: true
+    visitors:
+        json:
+            options: [JSON_FORCE_OBJECT]
 # FOS Rest
 fos_rest:
      format_listener:

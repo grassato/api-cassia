@@ -12,7 +12,7 @@ use JMS\Serializer\Annotation as Serializer;
 
 /**
  * @ORM\Entity(repositoryClass="AppBundle\Entity\Repository\ProductRepository")
- * @ORM\HasLifecycleCallbacks
+  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="product")
  */
 class Product
@@ -37,7 +37,7 @@ class Product
 
     /**
      * @ORM\Column(name="price", type="decimal", precision=7, scale=2, options={"default" : 0})
-     * @Assert\NotBlank(message="Not null")Cart
+     * @Assert\NotBlank(message="Not null")
      * @Filter\StripTags()
      * @Filter\Trim()
      * @Filter\StripNewlines()
@@ -50,7 +50,6 @@ class Product
      * @Serializer\Groups({"product-details", "product-summary"})
      */
     protected $category;
-
 
     public function __construct()
     {

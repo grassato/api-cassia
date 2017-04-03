@@ -5,6 +5,7 @@ namespace BaseBundle\Manager;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\PropertyAccess\PropertyAccess;
 
 /**
  * Abstract Manager
@@ -89,7 +90,7 @@ abstract class AbstractManager
         return $this->eventDispatcher;
     }
 
-    public function getObject(array $data)
+    public function transformArrayToObject(array $data)
     {
         $class =  $this->getClass();
         $object = new $class();
@@ -98,16 +99,40 @@ abstract class AbstractManager
         return $object;
     }
 
-    public function merge($data, $id = 0)
+    /**
+     * @param       $data
+     * @param       $id
+     * @param array $excludes
+     */
+    public function mergeObject($data, $id, $excludes = [])
     {
-        if (is_numeric($id) && $id > 0) {
-            $this->getOm()->merge($data);
+
+        $dafaultExcludes = ['id', 'createdAt', 'updatedAt', 'version'];
+        $dafaultExcludes = array_merge($dafaultExcludes, $excludes);
+
+        $accessor = PropertyAccess::createPropertyAccessor();
+
+        $entity = $this->fetch($id);
+
+        foreach ($data as $key => $value) {
+
+            if (!in_array($key, $dafaultExcludes)) {
+
+                $accessor->setValue($entity, $key, $value);
+
+            }
         }
+
+        return $entity;
+    }
+
+    public function merge($object)
+    {
+        $this->getOm()->merge($object);
 
         $this->getOm()->flush();
 
-
-        return $data;
+        return $object;
     }
 
     public function save($data)
@@ -118,20 +143,23 @@ abstract class AbstractManager
         return $data;
     }
 
-    public function delete($id)
+    public function delete($data, $flush = true)
     {
-        try {
-            $entity = $this->fetch($id);
+        $entity = $data;
 
-            if ($entity instanceof \Doctrine\ORM\Proxy\Proxy) {
-                return false;
-            }
+        if (is_numeric($entity)) {
 
-            $this->getOm()->remove($entity);
-            $this->getOm()->flush();
-        } catch (\Exception $e) {
-            return $e->getMessage();
+            $entity = $this->fetch($data);
         }
+
+        if ($entity instanceof \Doctrine\ORM\Proxy\Proxy) {
+            return false;
+        }
+
+        $this->getOm()->remove($entity);
+
+        if ($flush)
+            $this->getOm()->flush();
 
         return true;
     }
@@ -151,6 +179,132 @@ abstract class AbstractManager
 
         return $ret;
     }
+
+
+    /**
+     * Populate multiple association objects
+     *
+     * @param $object
+     *
+     * @return mixed
+     *
+     */
+    private function getAssociationMultipleObjects(&$object, $field)
+    {
+
+        $setMethod = 'set' . str_replace(' ', '', ucwords(str_replace('_', ' ', $field)));
+        $getMethod = 'get' . str_replace(' ', '', ucwords(str_replace('_', ' ', $field)));
+        $addMethod = 'add' . str_replace(' ', '', ucwords(str_replace('_', ' ', $field)));
+
+        $subClass           = $this->getOm()
+            ->getClassMetadata(get_class($object))
+            ->getAssociationTargetClass($field);
+
+        $identify               = $this->getOm()
+            ->getClassMetadata($subClass)
+            ->getIdentifierFieldNames();
+
+        $idIdentify = [];
+        $iterate = $object->$getMethod();
+
+        if (method_exists($object, $getMethod) && count($iterate) > 0) {
+
+            foreach ($iterate as $elements) {
+
+                if (is_object($elements)) {
+
+                    $elements = $elements->getId();
+                }
+
+                $idIdentify[] = $elements;
+            }
+
+            $object->$setMethod(NULL);
+
+            $classCollectionValue = $this->getOm()
+                ->getRepository($subClass)
+                ->findBy([$identify[0] => $idIdentify], [$identify[0] => 'DESC']);
+
+            $object->$addMethod($classCollectionValue);
+
+        }
+
+    }
+
+    /**
+     * Populate single association objects
+     *
+     * @param $object
+     *
+     * @return mixed
+     *
+     */
+    private function getAssociationSingleObject(&$object, $field)
+    {
+        $setMethod = 'set' . str_replace(' ', '', ucwords(str_replace('_', ' ', $field)));
+        $getMethod = 'get' . str_replace(' ', '', ucwords(str_replace('_', ' ', $field)));
+
+        $subClass           = $this->getOm()
+            ->getClassMetadata(get_class($object))
+            ->getAssociationTargetClass($field);
+
+        $identify               = $this->getOm()
+            ->getClassMetadata($subClass)
+            ->getIdentifierFieldNames();
+
+        $element = $object->$getMethod();
+
+        if (is_object($element)) {
+
+            $element = $element->getId();
+        }
+
+        $classValue = $this->getOm()
+            ->getRepository($subClass)
+            ->findOneBy([$identify[0] => $element]);
+
+        $object->$setMethod($classValue);
+
+    }
+
+    /**
+     * Check class has sub entity and popule with real object
+     *
+     * @param $object
+     *
+     * @return mixed
+     *
+     */
+    public function getAssociationTargetObject($object)
+    {
+        $classMetadata = $this->getOm()->getClassMetadata(get_class($object));
+
+        $fieldMapping = $classMetadata->getAssociationNames();
+
+        foreach ($fieldMapping as $field) {
+
+            $associationMapping = $this->getOm()
+                ->getClassMetadata(get_class($object))
+                ->getAssociationMappings();
+
+            $associationTypeBoolean = $this->getOm()
+                ->getClassMetadata(get_class($object))
+                ->isCollectionValuedAssociation($field);
+
+            if ($associationTypeBoolean && $associationMapping[$field]['type'] === 8) {
+
+                $this->getAssociationMultipleObjects($object, $field);
+
+            }else {
+
+                $this->getAssociationSingleObject($object, $field);
+
+            }
+        }
+
+        return $object;
+    }
+
     /**
      * @return ObjectManager
      */
