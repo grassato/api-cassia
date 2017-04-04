@@ -107,4 +107,86 @@ class CategoryController extends BaseController
     {
         return Category::class;
     }
+
+    /**
+     * @throws ApiProblemException
+     * Create a resource.
+     *
+     * @return array
+     * @ApiDoc(
+     *  section="Api Category",
+     *  description="Create a resource",
+     *  authentication=true,
+     *  parameters={
+     *  },
+     *  requirements={
+     *  },
+     * statusCodes={
+     *         200="Returned when successful",
+     *         403="Returned when the user is not authorized to say hello",
+     *         404={
+     *           "Returned when the user is not found",
+     *           "Returned when something else is not found"
+     *         },
+     *         401="Returned when the user is not authenticated",
+     *         500="Returned when some internal server error"
+     *   }
+     * )
+     * @FOSRest\Post("/categories", name="_categories")
+     * @FOSRest\View(serializerGroups={"identify", "category-details"})
+     */
+    public function postAction(Request $request)
+    {
+
+      $entityObject = $this->unserializeClass($request->getContent());
+
+      $this->objectFilter($entityObject);
+      $this->validate($entityObject);
+
+      $post = $this->getManager()->save($entityObject);
+
+      return $post;
+    }
+
+    /**
+     * @throws ApiProblemException
+     *
+     * @return array
+     * @ApiDoc(
+     *  section="Api Category",
+     *  description="Update a resource.",
+     *  authentication=true,
+     *  parameters={
+     *  },
+     *  requirements={
+     *  },
+     * statusCodes={
+     *         200="Returned when successful",
+     *         403="Returned when the user is not authorized to say hello",
+     *         404={
+     *           "Returned when the user is not found",
+     *           "Returned when something else is not found"
+     *         },
+     *         401="Returned when the user is not authenticated",
+     *         500="Returned when some internal server error"
+     *   }
+     * )
+     * @FOSRest\Put("/categories/{id}", name="_categories")
+     * @FOSRest\View(serializerGroups={"identify", "category-details"})
+     */
+    public function putAction($id, Request $request)
+    {
+        $entityObject = $this->unserializeClass($request->getContent());
+
+        $this->objectFilter($entityObject);
+        $this->validate($entityObject);
+
+        $excludes = ['products'];
+
+        $object = $this->getManager()->mergeObject($entityObject->toArray(), $id, $excludes);
+
+        $this->getManager()->merge($object);
+
+        return $object;
+    }
 }

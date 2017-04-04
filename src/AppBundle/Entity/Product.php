@@ -21,12 +21,12 @@ class Product
 
     /**
      * @ORM\Column(name="name", type="string")
-     * @Assert\NotBlank(message="Not null")
+     * @Assert\NotBlank(message="product.not_null")
      * @Assert\Length(
      *     min = "5",
-     *     minMessage = "post.too_short",
-     *     max = "10000",
-     *     maxMessage = "post.too_long"
+     *     minMessage = "product.too_short",
+     *     max = "50",
+     *     maxMessage = "product.too_long"
      * )
      * @Filter\StripTags()
      * @Filter\Trim()
@@ -37,7 +37,7 @@ class Product
 
     /**
      * @ORM\Column(name="price", type="decimal", precision=7, scale=2, options={"default" : 0})
-     * @Assert\NotBlank(message="Not null")
+     * @Assert\NotBlank(message="product.not_null")
      * @Filter\StripTags()
      * @Filter\Trim()
      * @Filter\StripNewlines()

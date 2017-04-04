@@ -5,4 +5,8 @@ comment.too_long: Comment is too long ({{ limit }} characters maximum)
 post.blank_content: Your post should have some content!
 post.too_short: Post content is too short ({{ limit }} characters minimum)
 post.too_long: Post is too long ({{ limit }} characters maximum)
-
+product.too_short: Product name content is too short ({{ limit }} characters minimum)
+product.too_long: Product name is too long ({{ limit }} characters maximum)
+product.not_null: This field cannot be empty
+category.too_short: Category is too short ({{ limit }} characters minimum)
+category.too_long: Category is too long ({{ limit }} characters maximum)

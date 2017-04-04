@@ -24,9 +24,9 @@ class Category
      * @Assert\NotBlank(message="Not null")
      * @Assert\Length(
      *     min = "5",
-     *     minMessage = "post.too_short",
-     *     max = "10000",
-     *     maxMessage = "post.too_long"
+     *     minMessage = "category.too_short",
+     *     max = "40",
+     *     maxMessage = "category.too_long"
      * )
      * @Filter\StripTags()
      * @Filter\Trim()
