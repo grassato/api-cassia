@@ -1,0 +1,16 @@
+# src/AppBundle\Entity\Building
+AppBundle\Entity\Building:
+    23a:
+        name: "23A"
+        updatedAt: <datetimeBetween('-5 days', 'now')>
+        createdAt: <datetimeBetween('-5 days', 'now')>
+
+    prisma:
+        name: "Prisma"
+        updatedAt: <datetimeBetween('-5 days', 'now')>
+        createdAt: <datetimeBetween('-5 days', 'now')>
+
+    16:
+        name: "16"
+        updatedAt: <datetimeBetween('-5 days', 'now')>
+        createdAt: <datetimeBetween('-5 days', 'now')>

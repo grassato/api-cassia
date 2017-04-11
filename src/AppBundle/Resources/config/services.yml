@@ -16,6 +16,10 @@ services:
       class: AppBundle\Manager\CategoryManager
       arguments:
         - '@doctrine.orm.entity_manager'
+    building.manager:
+      class: AppBundle\Manager\BuildingManager
+      arguments:
+        - '@doctrine.orm.entity_manager'
     #### Transformadores do Fractal
     app_api.transformer.post:
         class: AppBundle\Transformer\PostTransformer
