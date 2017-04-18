@@ -2,6 +2,8 @@
 
 namespace BaseBundle\Manager;
 
+use BaseBundle\Api\ApiProblem;
+use BaseBundle\Api\ApiProblemException;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -114,11 +116,21 @@ abstract class AbstractManager
 
         $entity = $this->fetch($id);
 
+        if($entity === NULL){
+
+            return ApiProblemException::throw("Object ". $this->getClass(). " is not exists,", 400);
+        }
+
         foreach ($data as $key => $value) {
 
             if (!in_array($key, $dafaultExcludes)) {
 
-                $accessor->setValue($entity, $key, $value);
+
+                if ($value !== NULL) {
+
+                    $accessor->setValue($entity, $key, $value);
+
+                }
 
             }
         }
@@ -196,18 +208,32 @@ abstract class AbstractManager
         $getMethod = 'get' . str_replace(' ', '', ucwords(str_replace('_', ' ', $field)));
         $addMethod = 'add' . str_replace(' ', '', ucwords(str_replace('_', ' ', $field)));
 
+        $class = get_class($object);
         $subClass           = $this->getOm()
-            ->getClassMetadata(get_class($object))
+            ->getClassMetadata($class)
             ->getAssociationTargetClass($field);
 
         $identify               = $this->getOm()
             ->getClassMetadata($subClass)
             ->getIdentifierFieldNames();
 
+
+
+        if (!method_exists($object, $addMethod) ) {
+
+            return ApiProblemException::throw("Attempted to call an undefined method named ($class::$addMethod).", 400);
+        }
+
+        if (!method_exists($object, $getMethod) ){
+
+            return ApiProblemException::throw("Attempted to call an undefined method named ($class::$getMethod) .", 400);
+        }
+
+
         $idIdentify = [];
         $iterate = $object->$getMethod();
 
-        if (method_exists($object, $getMethod) && count($iterate) > 0) {
+        if (count($iterate) > 0) {
 
             foreach ($iterate as $elements) {
 
@@ -217,9 +243,12 @@ abstract class AbstractManager
                 }
 
                 $idIdentify[] = $elements;
+
             }
 
+
             $object->$setMethod(NULL);
+
 
             $classCollectionValue = $this->getOm()
                 ->getRepository($subClass)
@@ -244,13 +273,24 @@ abstract class AbstractManager
         $setMethod = 'set' . str_replace(' ', '', ucwords(str_replace('_', ' ', $field)));
         $getMethod = 'get' . str_replace(' ', '', ucwords(str_replace('_', ' ', $field)));
 
+        $class = get_class($object);
         $subClass           = $this->getOm()
-            ->getClassMetadata(get_class($object))
+            ->getClassMetadata($class)
             ->getAssociationTargetClass($field);
 
         $identify               = $this->getOm()
             ->getClassMetadata($subClass)
             ->getIdentifierFieldNames();
+
+        if (!method_exists($object, $setMethod) ) {
+
+            return ApiProblemException::throw("Method ($class::$setMethod) is not exists.", 417);
+        }
+
+        if (!method_exists($object, $getMethod) ){
+
+            return ApiProblemException::throw("Method ($class::$getMethod) is not exists.", 417);
+        }
 
         $element = $object->$getMethod();
 
@@ -259,9 +299,16 @@ abstract class AbstractManager
             $element = $element->getId();
         }
 
+        $object->$setMethod(NULL);
+
         $classValue = $this->getOm()
             ->getRepository($subClass)
             ->findOneBy([$identify[0] => $element]);
+
+        if($classValue === NULL){
+
+            return ApiProblemException::throw("Object $subClass($element) is not exists.", 422);
+        }
 
         $object->$setMethod($classValue);
 

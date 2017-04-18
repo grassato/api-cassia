@@ -2,21 +2,14 @@
 
 namespace AppBundle\Controller;
 
-
 use AppBundle\Entity\DailyMenu;
 use AppBundle\Manager\DailyMenuManager;
 use BaseBundle\Api\ApiProblemException;
 use BaseBundle\Controller\BaseController;
 use FOS\RestBundle\Controller\Annotations as FOSRest;
-use Hateoas\HateoasBuilder;
-use Hateoas\Representation\CollectionRepresentation;
-use Hateoas\Representation\Factory\PagerfantaFactory;
-use Hateoas\Representation\PaginatedRepresentation;
-use Hautelook\AliceBundle\Tests\Functional\TestBundle\Entity\Prod;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\PropertyAccess\PropertyAccess;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Component\HttpFoundation\Request;
 
 class DailyMenuController extends BaseController
 {
@@ -67,6 +60,7 @@ class DailyMenuController extends BaseController
      *   }
      * )
      * @FOSRest\Get("/dailymenus", name="_dailymenus")
+     * @FOSRest\View(serializerGroups={"identify", "dailymenu-details", "product-summary"})
      */
     public function cgetAction(Request $request)
     {
@@ -77,11 +71,7 @@ class DailyMenuController extends BaseController
 
         $collection = $paginador->createSimpleCollection($qb, $request);
 
-        $groups = ['identify','dailymenu-summary'];
-
-        $response = $this->createApiResponse($collection, $groups);
-
-        return $response;
+        return $collection;
     }
 
     /**
@@ -133,15 +123,18 @@ class DailyMenuController extends BaseController
      *   }
      * )
      * @FOSRest\Post("/dailymenus", name="_dailymenus")
-     * @FOSRest\View(serializerGroups={"identify", "dailymenu-details"})
+     * @FOSRest\View(serializerGroups={"identify", "dailymenu-details", "product-summary"})
      */
     public function postAction(Request $request)
     {
 
       $entityObject = $this->unserializeClass($request->getContent());
 
+
       $this->objectFilter($entityObject);
       $this->validate($entityObject);
+
+      $this->getManager()->getAssociationTargetObject($entityObject);
 
       $post = $this->getManager()->save($entityObject);
 
@@ -172,7 +165,7 @@ class DailyMenuController extends BaseController
      *   }
      * )
      * @FOSRest\Put("/dailymenus/{id}", name="_dailymenus")
-     * @FOSRest\View(serializerGroups={"identify", "dailymenu-details"})
+     * @FOSRest\View(serializerGroups={"identify", "dailymenu-details", "product-summary"})
      */
     public function putAction($id, Request $request)
     {
@@ -181,9 +174,9 @@ class DailyMenuController extends BaseController
         $this->objectFilter($entityObject);
         $this->validate($entityObject);
 
-        $excludes = ['products'];
+        $object = $this->getManager()->mergeObject($entityObject->toArray(), $id);
 
-        $object = $this->getManager()->mergeObject($entityObject->toArray(), $id, $excludes);
+        $this->getManager()->getAssociationTargetObject($object);
 
         $this->getManager()->merge($object);
 

@@ -71,7 +71,7 @@ class TokenController extends Controller
         $token = $this->get('lexik_jwt_authentication.encoder')
             ->encode([
                 'username' => $user->getUsername(),
-                'exp' => time() + 3600 // 1 hour expiration
+                'exp' => time() + 114600 // 1 hour expiration
             ]);
         $authenticationSuccessHandler = $this->container->get('lexik_jwt_authentication.handler.authentication_success');
 

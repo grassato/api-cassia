@@ -21,4 +21,23 @@ class ApiProblemException extends HttpException
     {
         return $this->apiProblem;
     }
+
+    /***
+     * Return exception default ApiProblem type
+     * @param       $title
+     * @param int   $errorType
+     * @param array $extra
+     */
+    public static function throw($title, $errorType = 4000, $extra = [])
+    {
+        $problem = new ApiProblem($errorType);
+        $problem->setTitle($title);
+
+        if (count($extra) > 0 ){
+            $problem->setExtra($extra);
+        }
+
+        throw new ApiProblemException($problem);
+
+    }
 }

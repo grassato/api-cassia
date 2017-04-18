@@ -130,7 +130,12 @@ abstract class BaseController extends FOSRestController
 
             $problem = new ApiProblem(400);
             $problem->setTitle("Invalid serializer class exception.");
-            $problem->setExtra(['filters' => $e]);
+            $problem->setExtra(['filters' =>
+                                ['message' => $e->getMessage()],
+                                   ['code' => $e->getCode()],
+                                   ['line' => $e->getLine()],
+                                   ['string' => $e->getTraceAsString()],
+                               ]);
             throw new ApiProblemException($problem);
 
         }
@@ -149,7 +154,7 @@ abstract class BaseController extends FOSRestController
         } catch (\Exception $e) {
             $problem = new ApiProblem(400);
             $problem->setTitle("Invalid filter exception.");
-            $problem->setExtra(['filters' => $e]);
+            $problem->setExtra(['filters' => $e->getMessage()]);
             throw new ApiProblemException($problem);
         }
     }

@@ -11,7 +11,7 @@ gesdinet_jwt_refresh_token:
 
 api:
     resource: "@AppBundle/Controller"
-    type: rest
+    type:           rest
     prefix:         /api/v1/{_locale}
     defaults:
         _locale: en

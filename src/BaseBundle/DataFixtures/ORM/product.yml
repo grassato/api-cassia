@@ -4,6 +4,7 @@ AppBundle\Entity\Product:
         name: <text(100)>
         price:  <numberBetween(10, 999)>
         category: '@marmita_1'
+        dailyMenus: ['@cardapio1']
         updatedAt: <datetimeBetween('-5 days', 'now')>
         createdAt: <datetimeBetween('-5 days', 'now')>
 
@@ -11,6 +12,7 @@ AppBundle\Entity\Product:
         name: <text(100)>
         price:  <numberBetween(10, 999)>
         category: '@marmita_2'
+        dailyMenus: ['@cardapio2','@cardapio1']
         updatedAt: <datetimeBetween('-5 days', 'now')>
         createdAt: <datetimeBetween('-5 days', 'now')>
 
@@ -18,6 +20,7 @@ AppBundle\Entity\Product:
         name: <text(100)>
         price:  <numberBetween(10, 999)>
         category: '@marmita_3'
+        dailyMenus: ['@cardapio3', '@cardapio2']
         updatedAt: <datetimeBetween('-5 days', 'now')>
         createdAt: <datetimeBetween('-5 days', 'now')>
 
@@ -25,6 +28,7 @@ AppBundle\Entity\Product:
         name: <text(100)>
         price:  <numberBetween(10, 999)>
         category: '@marmita_drinks'
+        dailyMenus: ['@cardapio4','@cardapio3']
         updatedAt: <datetimeBetween('-5 days', 'now')>
         createdAt: <datetimeBetween('-5 days', 'now')>
 
@@ -32,5 +36,6 @@ AppBundle\Entity\Product:
         name: <text(100)>
         price:  <numberBetween(10, 999)>
         category: '@marmita_accompaniment'
+        dailyMenus: ['@cardapio5', '@cardapio6']
         updatedAt: <datetimeBetween('-5 days', 'now')>
         createdAt: <datetimeBetween('-5 days', 'now')>

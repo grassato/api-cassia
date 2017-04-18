@@ -57,8 +57,12 @@ class Product
     }
 
     /**
-     * @ORM\ManyToMany(targetEntity="DailyMenu", cascade={"persist"}, inversedBy="products")
-     * @Serializer\Groups({"product-summary"})
+     * @ORM\ManyToMany(targetEntity="DailyMenu", inversedBy="products", cascade={"persist"})
+     * @ORM\JoinTable(name="product_daily_menu",
+     *      joinColumns={@ORM\JoinColumn(name="product_id", referencedColumnName="id", onDelete="CASCADE")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="daily_menu_id", referencedColumnName="id", onDelete="CASCADE")}
+     * )
+     * @Serializer\Groups({"product-details"})
      */
     protected $dailyMenus;
 

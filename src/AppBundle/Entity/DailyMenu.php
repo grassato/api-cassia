@@ -22,9 +22,8 @@ class DailyMenu
     /**
      * @ORM\Column(name="date", type="datetime")
      * @Assert\NotBlank(message="Not null")
-     * @Filter\StripTags()
-     * @Filter\Trim()
-     * @Filter\StripNewlines()
+     * @Assert\DateTime()
+     * @Serializer\Type("DateTime<'Y-m-d h:m'>")
      * @Serializer\Groups({"dailymenu-summary", "dailymenu-details"})
      */
     protected $date;
@@ -39,9 +38,6 @@ class DailyMenu
     {
         $this->products = new ArrayCollection();
     }
-
-
-
 
     /**
      * Set date
@@ -77,6 +73,20 @@ class DailyMenu
     public function addProduct(\AppBundle\Entity\Product $product)
     {
         $this->products[] = $product;
+
+        return $this;
+    }
+
+    /**
+     * Add product
+     *
+     * @param \AppBundle\Entity\Product $product
+     *
+     * @return DailyMenu
+     */
+    public function setProducts(\AppBundle\Entity\Product $product = null)
+    {
+        $this->products = $product;
 
         return $this;
     }
