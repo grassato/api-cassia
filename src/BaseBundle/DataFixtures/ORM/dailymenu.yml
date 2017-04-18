@@ -1,0 +1,13 @@
+# src/AppBundle\Entity\DailyMenu
+AppBundle\Entity\DailyMenu:
+    cardapio1:
+        date: <datetimeBetween('-5 days', 'now')>
+        products: ["@product_1"]
+        updatedAt: <datetimeBetween('-5 days', 'now')>
+        createdAt: <datetimeBetween('-5 days', 'now')>
+
+    cardapio2:
+        date: <datetimeBetween('-3 days', 'now')>
+        products: ["@product_2"]
+        updatedAt: <datetimeBetween('-5 days', 'now')>
+        createdAt: <datetimeBetween('-5 days', 'now')>

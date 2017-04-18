@@ -20,6 +20,10 @@ services:
       class: AppBundle\Manager\BuildingManager
       arguments:
         - '@doctrine.orm.entity_manager'
+    dailymenu.manager:
+      class: AppBundle\Manager\DailyMenuManager
+      arguments:
+        - '@doctrine.orm.entity_manager'
     #### Transformadores do Fractal
     app_api.transformer.post:
         class: AppBundle\Transformer\PostTransformer

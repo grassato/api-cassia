@@ -22,7 +22,8 @@ class AppFixtures extends AbstractLoader
 
             __DIR__.'/category.yml',
             __DIR__.'/product.yml',
-            __DIR__.'/building.yml'
+            __DIR__.'/building.yml',
+            __DIR__.'/dailymenu.yml'
         ];
     }
 }

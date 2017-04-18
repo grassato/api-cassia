@@ -53,7 +53,14 @@ class Product
 
     public function __construct()
     {
+          $this->dailyMenus = new ArrayCollection();
     }
+
+    /**
+     * @ORM\ManyToMany(targetEntity="DailyMenu", cascade={"persist"}, inversedBy="products")
+     * @Serializer\Groups({"product-summary"})
+     */
+    protected $dailyMenus;
 
     /**
      * Set name
@@ -125,5 +132,39 @@ class Product
     public function getCategory()
     {
         return $this->category;
+    }
+
+    /**
+     * Add dailyMenu
+     *
+     * @param \AppBundle\Entity\DailyMenu $dailyMenu
+     *
+     * @return Product
+     */
+    public function addDailyMenu(\AppBundle\Entity\DailyMenu $dailyMenu)
+    {
+        $this->dailyMenus[] = $dailyMenu;
+
+        return $this;
+    }
+
+    /**
+     * Remove dailyMenu
+     *
+     * @param \AppBundle\Entity\DailyMenu $dailyMenu
+     */
+    public function removeDailyMenu(\AppBundle\Entity\DailyMenu $dailyMenu)
+    {
+        $this->dailyMenus->removeElement($dailyMenu);
+    }
+
+    /**
+     * Get dailyMenus
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getDailyMenus()
+    {
+        return $this->dailyMenus;
     }
 }

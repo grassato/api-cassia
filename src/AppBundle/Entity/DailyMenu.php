@@ -13,25 +13,25 @@ use JMS\Serializer\Annotation as Serializer;
 /**
  * @ORM\Entity(repositoryClass="AppBundle\Entity\Repository\DailyMenuRepository")
  * @ORM\HasLifecycleCallbacks
- * @ORM\Table(name="Building")
+ * @ORM\Table(name="dailymenu")
  */
 class DailyMenu
 {
     use EntityTrait;
 
     /**
-     * @ORM\Column(name="date", type="DateTime")
+     * @ORM\Column(name="date", type="datetime")
      * @Assert\NotBlank(message="Not null")
      * @Filter\StripTags()
      * @Filter\Trim()
      * @Filter\StripNewlines()
-     * @Serializer\Groups({"building-summary", "building-details"})
+     * @Serializer\Groups({"dailymenu-summary", "dailymenu-details"})
      */
     protected $date;
 
     /**
-     * @ORM\OneToMany(targetEntity="Product", mappedBy="category", cascade={"persist"})
-     * @Serializer\Groups({"category-details"})
+     * @ORM\ManyToMany(targetEntity="Product", mappedBy="dailyMenus", cascade={"persist"})
+     * @Serializer\Groups({"dailymenu-details"})
      */
     protected $products;
 
@@ -79,6 +79,21 @@ class DailyMenu
         $this->products[] = $product;
 
         return $this;
+    }
+
+    /**
+     * Add products
+     *
+     * @param $products
+     *
+     * @return DailyMenu
+     */
+    public function addProducts($products)
+    {
+      foreach ($products as $product) {
+        $this->addProduct($product);
+      }
+      return $this;
     }
 
     /**
