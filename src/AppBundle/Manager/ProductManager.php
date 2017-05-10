@@ -18,15 +18,13 @@ class ProductManager extends AbstractManager
      *
      * Remove tags
      */
-    public function removeOldTags(Product $project) {
-
+    public function removeOldTags(Product $project)
+    {
         foreach ($project->getTags() as $tag) {
-
             $project->removeTag($tag);
             $this->getOm()->persist($project);
         }
 
         $this->getOm()->flush();
     }
-
 }

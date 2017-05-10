@@ -108,7 +108,6 @@ abstract class AbstractManager
      */
     public function mergeObject($data, $id, $excludes = [])
     {
-
         $dafaultExcludes = ['id', 'createdAt', 'updatedAt', 'version'];
         $dafaultExcludes = array_merge($dafaultExcludes, $excludes);
 
@@ -116,22 +115,15 @@ abstract class AbstractManager
 
         $entity = $this->fetch($id);
 
-        if($entity === NULL){
-
+        if ($entity === null) {
             return ApiProblemException::throw("Object ". $this->getClass(). " is not exists,", 400);
         }
 
         foreach ($data as $key => $value) {
-
             if (!in_array($key, $dafaultExcludes)) {
-
-
-                if ($value !== NULL) {
-
+                if ($value !== null) {
                     $accessor->setValue($entity, $key, $value);
-
                 }
-
             }
         }
 
@@ -160,7 +152,6 @@ abstract class AbstractManager
         $entity = $data;
 
         if (is_numeric($entity)) {
-
             $entity = $this->fetch($data);
         }
 
@@ -170,8 +161,9 @@ abstract class AbstractManager
 
         $this->getOm()->remove($entity);
 
-        if ($flush)
+        if ($flush) {
             $this->getOm()->flush();
+        }
 
         return true;
     }
@@ -203,7 +195,6 @@ abstract class AbstractManager
      */
     private function getAssociationMultipleObjects(&$object, $field)
     {
-
         $setMethod = 'set' . str_replace(' ', '', ucwords(str_replace('_', ' ', $field)));
         $getMethod = 'get' . str_replace(' ', '', ucwords(str_replace('_', ' ', $field)));
         $addMethod = 'add' . str_replace(' ', '', ucwords(str_replace('_', ' ', $field)));
@@ -219,13 +210,11 @@ abstract class AbstractManager
 
 
 
-        if (!method_exists($object, $addMethod) ) {
-
+        if (!method_exists($object, $addMethod)) {
             return ApiProblemException::throw("Attempted to call an undefined method named ($class::$addMethod).", 400);
         }
 
-        if (!method_exists($object, $getMethod) ){
-
+        if (!method_exists($object, $getMethod)) {
             return ApiProblemException::throw("Attempted to call an undefined method named ($class::$getMethod) .", 400);
         }
 
@@ -234,30 +223,25 @@ abstract class AbstractManager
         $iterate = $object->$getMethod();
 
         if (count($iterate) > 0) {
-
             foreach ($iterate as $elements) {
-
                 if (is_object($elements)) {
-
                     $elements = $elements->getId();
                 }
 
                 $idIdentify[] = $elements;
-
             }
 
 
-            $object->$setMethod(NULL);
+            $object->$setMethod(null);
 
 
             $classCollectionValue = $this->getOm()
                 ->getRepository($subClass)
                 ->findBy([$identify[0] => $idIdentify], [$identify[0] => 'DESC']);
 
+
             $object->$addMethod($classCollectionValue);
-
         }
-
     }
 
     /**
@@ -282,36 +266,31 @@ abstract class AbstractManager
             ->getClassMetadata($subClass)
             ->getIdentifierFieldNames();
 
-        if (!method_exists($object, $setMethod) ) {
-
+        if (!method_exists($object, $setMethod)) {
             return ApiProblemException::throw("Method ($class::$setMethod) is not exists.", 417);
         }
 
-        if (!method_exists($object, $getMethod) ){
-
+        if (!method_exists($object, $getMethod)) {
             return ApiProblemException::throw("Method ($class::$getMethod) is not exists.", 417);
         }
 
         $element = $object->$getMethod();
 
         if (is_object($element)) {
-
             $element = $element->getId();
         }
 
-        $object->$setMethod(NULL);
+        $object->$setMethod(null);
 
         $classValue = $this->getOm()
             ->getRepository($subClass)
             ->findOneBy([$identify[0] => $element]);
 
-        if($classValue === NULL){
-
+        if ($classValue === null) {
             return ApiProblemException::throw("Object $subClass($element) is not exists.", 422);
         }
 
         $object->$setMethod($classValue);
-
     }
 
     /**
@@ -329,7 +308,6 @@ abstract class AbstractManager
         $fieldMapping = $classMetadata->getAssociationNames();
 
         foreach ($fieldMapping as $field) {
-
             $associationMapping = $this->getOm()
                 ->getClassMetadata(get_class($object))
                 ->getAssociationMappings();
@@ -339,13 +317,9 @@ abstract class AbstractManager
                 ->isCollectionValuedAssociation($field);
 
             if ($associationTypeBoolean && $associationMapping[$field]['type'] === 8) {
-
                 $this->getAssociationMultipleObjects($object, $field);
-
-            }else {
-
+            } else {
                 $this->getAssociationSingleObject($object, $field);
-
             }
         }
 

@@ -33,11 +33,10 @@ class ApiProblemException extends HttpException
         $problem = new ApiProblem($errorType);
         $problem->setTitle($title);
 
-        if (count($extra) > 0 ){
+        if (count($extra) > 0) {
             $problem->setExtra($extra);
         }
 
         throw new ApiProblemException($problem);
-
     }
 }

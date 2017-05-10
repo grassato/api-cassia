@@ -28,9 +28,15 @@ class DailyMenu
      */
     protected $date;
 
+
+
     /**
-     * @ORM\ManyToMany(targetEntity="Product", mappedBy="dailyMenus", cascade={"persist"})
-     * @Serializer\Groups({"dailymenu-details"})
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Product", inversedBy="dailyMenus", cascade={"persist"})
+     * @ORM\JoinTable(name="product_daily_menu",
+     *      joinColumns={@ORM\JoinColumn(name="product_id", referencedColumnName="id", onDelete="CASCADE")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="daily_menu_id", referencedColumnName="id", onDelete="CASCADE")}
+     * )
+     * @Serializer\Groups({"dailymenu-details", "dailymenu-summary"})
      */
     protected $products;
 
@@ -100,10 +106,9 @@ class DailyMenu
      */
     public function addProducts($products)
     {
-      foreach ($products as $product) {
-        $this->addProduct($product);
-      }
-      return $this;
+        foreach ($products as $product) {
+            $this->addProduct($product);
+        }
     }
 
     /**

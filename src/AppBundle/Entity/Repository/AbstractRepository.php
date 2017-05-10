@@ -47,7 +47,6 @@ class AbstractRepository extends EntityRepository
 
         if (array_key_exists('sort', $parameters) and !empty($parameters['sort'])) {
             foreach ($parameters['sort'] as $sortConfig) {
-
                 $qb->addOrderBy("e.${sortConfig['field']}", $sortConfig['direction']);
             }
         }

@@ -112,17 +112,16 @@ class ProductController extends BaseController
      */
     public function postAction(Request $request)
     {
+        $entityObject = $this->unserializeClass($request->getContent());
 
-      $entityObject = $this->unserializeClass($request->getContent());
+        $this->objectFilter($entityObject);
+        $this->validate($entityObject);
 
-      $this->objectFilter($entityObject);
-      $this->validate($entityObject);
+        $this->getManager()->getAssociationTargetObject($entityObject);
 
-      $this->getManager()->getAssociationTargetObject($entityObject);
+        $post = $this->getManager()->save($entityObject);
 
-      $post = $this->getManager()->save($entityObject);
-
-      return $post;
+        return $post;
     }
 
     /**

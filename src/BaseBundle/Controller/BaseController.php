@@ -8,7 +8,7 @@ use BaseBundle\Transformer\CustomSerializer;
 use BaseBundle\Transformer\Transformer;
 use JMS\Serializer\SerializationContext;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-Use FOS\RestBundle\Controller\FOSRestController;
+use FOS\RestBundle\Controller\FOSRestController;
 use Symfony\Component\CssSelector\Exception\InternalErrorException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -102,12 +102,10 @@ abstract class BaseController extends FOSRestController
                 $context
             );
         } catch (\Exception $e) {
-
             $problem = new ApiProblem(400);
             $problem->setTitle("Invalid serializer exception.");
             $problem->setExtra(['filters' => $e]);
             throw new ApiProblemException($problem);
-
         }
 
         return $data;
@@ -120,14 +118,11 @@ abstract class BaseController extends FOSRestController
     protected function unserializeClass($content)
     {
         try {
-
             $class = $this->getEntityClass();
             $contentJson = $this->unserialize($content, $class, 'json');
 
             return $contentJson;
-
         } catch (\Exception $e) {
-
             $problem = new ApiProblem(400);
             $problem->setTitle("Invalid serializer class exception.");
             $problem->setExtra(['filters' =>
@@ -137,7 +132,6 @@ abstract class BaseController extends FOSRestController
                                    ['string' => $e->getTraceAsString()],
                                ]);
             throw new ApiProblemException($problem);
-
         }
     }
 
