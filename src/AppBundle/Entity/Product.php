@@ -12,7 +12,7 @@ use JMS\Serializer\Annotation as Serializer;
 
 /**
  * @ORM\Entity(repositoryClass="AppBundle\Entity\Repository\ProductRepository")
-  * @ORM\HasLifecycleCallbacks
+ * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="product")
  */
 class Product
@@ -47,21 +47,17 @@ class Product
 
     /**
      * @ORM\ManyToOne(targetEntity="Category", cascade={"persist"}, inversedBy="products")
-     * @Serializer\Groups({"product-details", "product-summary"})
+     * @Serializer\Groups({"product-details"})
      */
     protected $category;
 
     public function __construct()
     {
-          $this->dailyMenus = new ArrayCollection();
+        $this->dailyMenus = new ArrayCollection();
     }
 
     /**
-     * @ORM\ManyToMany(targetEntity="DailyMenu", inversedBy="products", cascade={"persist"})
-     * @ORM\JoinTable(name="product_daily_menu",
-     *      joinColumns={@ORM\JoinColumn(name="product_id", referencedColumnName="id", onDelete="CASCADE")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="daily_menu_id", referencedColumnName="id", onDelete="CASCADE")}
-     * )
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\DailyMenu", mappedBy="products", cascade={"persist"})
      * @Serializer\Groups({"product-details"})
      */
     protected $dailyMenus;
@@ -152,6 +148,14 @@ class Product
         return $this;
     }
 
+    public function addDailyMenus($dailyMenus)
+    {
+        foreach ($dailyMenus as $dailyMenu) {
+            $this->addDailyMenu($dailyMenu);
+        }
+        return $this;
+    }
+
     /**
      * Add dailyMenus
      *
@@ -175,6 +179,16 @@ class Product
     public function removeDailyMenu(\AppBundle\Entity\DailyMenu $dailyMenu)
     {
         $this->dailyMenus->removeElement($dailyMenu);
+    }
+
+    /**
+     * Get dailyMenus
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function setDailyMenus(\AppBundle\Entity\DailyMenu $dailyMenu = null)
+    {
+        return $this->dailyMenus = $dailyMenu;
     }
 
     /**

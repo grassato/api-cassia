@@ -2,7 +2,6 @@
 
 namespace AppBundle\Controller;
 
-
 use AppBundle\Entity\Building;
 use AppBundle\Manager\BuildingManager;
 use BaseBundle\Api\ApiProblemException;
@@ -137,15 +136,14 @@ class BuildingController extends BaseController
      */
     public function postAction(Request $request)
     {
+        $entityObject = $this->unserializeClass($request->getContent());
 
-      $entityObject = $this->unserializeClass($request->getContent());
+        $this->objectFilter($entityObject);
+        $this->validate($entityObject);
 
-      $this->objectFilter($entityObject);
-      $this->validate($entityObject);
+        $post = $this->getManager()->save($entityObject);
 
-      $post = $this->getManager()->save($entityObject);
-
-      return $post;
+        return $post;
     }
 
     /**

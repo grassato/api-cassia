@@ -58,5 +58,4 @@ class Building
     {
         return $this->name;
     }
-
 }
