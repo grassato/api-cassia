@@ -72,21 +72,20 @@
         "league/fractal": "^0.13.0",
         "pagerfanta/pagerfanta": "^1.0",
         "gesdinet/jwt-refresh-token-bundle": "^0.2.0",
-        "phpmetrics/phpmetrics": "^2.2"
-
+        "phpmetrics/phpmetrics": "^2.2",
+        "doctrine/data-fixtures": "^1.2",
+        "hautelook/alice-bundle": "^1.4",
+        "doctrine/doctrine-fixtures-bundle": "^2.3"
     },
     "require-dev": {
         "sensio/generator-bundle": "^3.0",
         "symfony/phpunit-bridge": "^3.0",
         "liip/functional-test-bundle": "^1.7",
-        "hautelook/alice-bundle": "^1.4",
         "phpunit/phpunit": "^5.7",
-        "doctrine/data-fixtures": "^1.2",
         "mockery/mockery": "^0.9.7",
         "squizlabs/php_codesniffer": "^2.7",
         "friendsofphp/php-cs-fixer": "^2.0",
         "fzaninotto/faker": "^1.6",
-        "doctrine/doctrine-fixtures-bundle": "^2.3",
         "phpstan/phpstan": "^0.6.4"
     },
     "scripts": {
