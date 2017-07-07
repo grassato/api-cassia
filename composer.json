@@ -10,7 +10,8 @@
     ],
     "autoload": {
         "psr-4": {
-            "": "src/"
+            "AppBundle\\": "src/AppBundle",
+            "BaseBundle\\": "src/BaseBundle"
         },
         "classmap": [
             "app/AppKernel.php",
@@ -18,12 +19,16 @@
         ]
     },
     "config": {
-        "process-timeout": 90000
+        "process-timeout": 90000,
+        "sort-packages": true
     },
     "autoload-dev": {
         "psr-4": {
             "Tests\\": "tests/"
-        }
+        },
+        "files": [
+          "vendor/symfony/symfony/src/Symfony/Component/VarDumper/Resources/functions/dump.php"
+        ]
     },
     "minimum-stability": "stable",
     "require": {
@@ -84,12 +89,12 @@
     },
     "scripts": {
         "symfony-scripts": [
-            "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
+          "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
+          "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
+          "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
+          "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
+          "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
+          "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
         ],
         "post-install-cmd": [
             "@symfony-scripts"
@@ -107,9 +112,6 @@
         "symfony-assets-install": "relative",
         "incenteev-parameters": {
             "file": "app/config/parameters.yml"
-        },
-        "branch-alias": {
-            "dev-master": "3.3-dev"
         }
     }
 }
