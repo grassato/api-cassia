@@ -102,7 +102,12 @@
         ],
         "post-update-cmd": [
             "@symfony-scripts"
-        ]
+        ],
+       "heroku-cmd": [
+         "bin/console doctrine:database:create --env=heroku",
+         "bin/console doctrine:schema:update --force --env=heroku",
+         "bin/console hautelook_alice:doctrine:fixtures:load -n --env=heroku"
+       ]
     },
     "extra": {
         "symfony-app-dir": "app",
