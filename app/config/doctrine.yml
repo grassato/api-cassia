@@ -2,11 +2,11 @@
 doctrine:
     dbal:
         driver:   pdo_mysql
-        host:     "%database_host%"
-        port:     "%database_port%"
-        dbname:   "%database_name%"
-        user:     "%database_user%"
-        password: "%database_password%"
+        host:     '%env(SYMFONY__DATABASE_HOST)%'
+        port:     '%env(SYMFONY__DATABASE_PORT)%'
+        dbname:   '%env(SYMFONY__DATABASE_NAME)%'
+        user:     '%env(SYMFONY__DATABASE_USER)%'
+        password: '%env(SYMFONY__DATABASE_PASSWORD)%'
         charset:  UTF8
 
     orm:

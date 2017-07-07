@@ -157,21 +157,6 @@ class Product
     }
 
     /**
-     * Add dailyMenus
-     *
-     * @param \AppBundle\Entity\DailyMenu $dailyMenu
-     *
-     * @return Product
-     */
-    public function addDailyMenus($dailyMenus)
-    {
-      foreach ($dailyMenus as $dailyMenu) {
-        $this->addDailyMenu($dailyMenu);
-      }
-        return $this;
-    }
-
-    /**
      * Remove dailyMenu
      *
      * @param \AppBundle\Entity\DailyMenu $dailyMenu

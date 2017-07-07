@@ -1,6 +1,6 @@
 <?php
 
-use Dotenv\Dotenv;
+use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\Debug\Debug;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -24,10 +24,10 @@ use Symfony\Component\HttpFoundation\Request;
 //}
 
 /** @var \Composer\Autoload\ClassLoader $loader */
-$loader = require __DIR__.'/../app/autoload.php';
-$dotenv = new Dotenv(__DIR__ . '/../');
-if (file_exists(".env")) {
-    $dotenv->load();
+require __DIR__.'/../vendor/autoload.php';
+
+if (file_exists(__DIR__.'/../.env')) {
+    (new Dotenv())->load(__DIR__.'/../.env');
 }
 
 $env = isset($_SERVER['SYMFONY_ENV'])? $_SERVER['SYMFONY_ENV'] : 'dev';
@@ -38,7 +38,9 @@ if ($debug) {
 }
 
 $kernel = new AppKernel('dev', true);
-$kernel->loadClassCache();
+if (PHP_VERSION_ID < 70000) {
+    $kernel->loadClassCache();
+}
 $request = Request::createFromGlobals();
 $response = $kernel->handle($request);
 $response->send();

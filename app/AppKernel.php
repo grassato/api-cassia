@@ -1,6 +1,6 @@
 <?php
 
-use Dotenv\Dotenv;
+use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Config\Loader\LoaderInterface;
@@ -24,7 +24,6 @@ class AppKernel extends Kernel
             new Gesdinet\JWTRefreshTokenBundle\GesdinetJWTRefreshTokenBundle(),
             new Nelmio\CorsBundle\NelmioCorsBundle(),
             new DMS\Bundle\FilterBundle\DMSFilterBundle(),
-            new Bazinga\Bundle\HateoasBundle\BazingaHateoasBundle(),
             new BaseBundle\BaseBundle(),
             new AppBundle\AppBundle(),
         ];
@@ -74,8 +73,9 @@ class AppKernel extends Kernel
             }
         });
 
-        if (file_exists("../.env")) {
-            (new Dotenv(__DIR__.'/../'))->load();
+        if (file_exists(__DIR__.'/../.env')) {
+            (new Dotenv())->load(__DIR__.'/../.env');
+
             $envParameters = $this->getEnvParameters();
             $loader->load(function ($container) use ($envParameters) {
                 $container->getParameterBag()->add($envParameters);

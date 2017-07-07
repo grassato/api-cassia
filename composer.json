@@ -31,8 +31,8 @@
         "ext-mbstring": "*",
         "ext-mcrypt": "*",
         "ext-intl": "*",
-        "symfony/symfony": "@stable",
-        "vlucas/phpdotenv": "~2.0",
+        "symfony/symfony": "~3.3",
+        "symfony/dotenv": "~3.3",
         "doctrine/orm": "^2.5",
         "doctrine/doctrine-bundle": "^1.6",
         "doctrine/doctrine-cache-bundle": "^1.2",
@@ -64,7 +64,8 @@
         "predis/predis": "^1.0",
         "league/fractal": "^0.13.0",
         "pagerfanta/pagerfanta": "^1.0",
-        "gesdinet/jwt-refresh-token-bundle": "^0.2.0"
+        "gesdinet/jwt-refresh-token-bundle": "^0.2.0",
+        "phpmetrics/phpmetrics": "^2.2"
 
     },
     "require-dev": {
@@ -75,16 +76,10 @@
         "phpunit/phpunit": "^5.7",
         "doctrine/data-fixtures": "^1.2",
         "mockery/mockery": "^0.9.7",
-        "brianium/paratest": "^0.13",
         "squizlabs/php_codesniffer": "^2.7",
         "friendsofphp/php-cs-fixer": "^2.0",
         "fzaninotto/faker": "^1.6",
-        "sebastian/phpcpd": "^2.0",
-        "pdepend/pdepend": "^2.4",
-        "phpmd/phpmd": "^2.5",
         "doctrine/doctrine-fixtures-bundle": "^2.3",
-        "phploc/phploc": "^3.0",
-        "theseer/phpdox": "^0.9.0",
         "phpstan/phpstan": "^0.6.4"
     },
     "scripts": {

@@ -50,12 +50,12 @@ monolog:
 #        charset: "UTF8"
 doctrine:
     dbal:
-        driver:   "%database_drive%"
-        host:     "%database_host%"
-        port:     "%database_port%"
-        dbname:   "%database_name%"
-        user:     "%database_user%"
-        password: "%database_password%"
+        driver:   pdo_mysql
+        host:     '%env(SYMFONY__DATABASE_HOST)%'
+        port:     '%env(SYMFONY__DATABASE_PORT)%'
+        dbname:   '%env(SYMFONY__DATABASE_NAME)%'
+        user:     '%env(SYMFONY__DATABASE_USER)%'
+        password: '%env(SYMFONY__DATABASE_PASSWORD)%'
         charset:  UTF8
         # if using pdo_sqlite as your database driver:
         #   1. add the path in parameters.yml
