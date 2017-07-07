@@ -3,6 +3,7 @@
 namespace Tests\AppBundle\Tests;
 
 use AppBundle\Entity\Category;
+use AppBundle\Entity\DailyMenu;
 use AppBundle\Entity\Product;
 use BaseBundle\Tests\AbstractEntityTest;
 
@@ -45,6 +46,7 @@ class ProductTest extends AbstractEntityTest
               carne <script><p>',
             'price' => 2,
             'category' => $this->mockCategory(),
+            'dailyMenus' => $this->mockDailyMenu(),
             'updatedAt' => new \Datetime('2015-09-09 00:00:00'),
             'createdAt' => new \Datetime('2015-09-09 00:00:00'),
             'version' => 2,
@@ -54,6 +56,14 @@ class ProductTest extends AbstractEntityTest
     protected function mockCategory()
     {
         $module = \Mockery::mock(Category::class)
+            ->shouldIgnoreMissing();
+
+        return $module;
+    }
+
+    protected function mockDailyMenu()
+    {
+        $module = \Mockery::mock(DailyMenu::class)
             ->shouldIgnoreMissing();
 
         return $module;

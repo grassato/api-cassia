@@ -152,7 +152,8 @@ class PaginationFactory
         if (count($meta) > 0) {
             $pagination['meta']['metas'] = $meta;
         }
-        $pagination['data'] = $data['data'];
+
+        $pagination['data'] = isset($data['data']) ? $data['data'] : [];
         $pagination['meta']['pagination']['total'] = $pagerfanta->getNbResults();
         $pagination['meta']['pagination']['count'] = $pagerfanta->getIterator()->count();
         $pagination['meta']['pagination']['per_page'] = $pagerfanta->getMaxPerPage();

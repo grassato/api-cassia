@@ -67,12 +67,9 @@
         "lexik/jwt-authentication-bundle": "^2.1",
         "nelmio/cors-bundle": "^1.5",
         "nelmio/api-doc-bundle": "^2.13",
-        "snc/redis-bundle": "2.x-dev",
-        "predis/predis": "^1.0",
         "league/fractal": "^0.13.0",
         "pagerfanta/pagerfanta": "^1.0",
         "gesdinet/jwt-refresh-token-bundle": "^0.2.0",
-        "phpmetrics/phpmetrics": "^2.2",
         "doctrine/data-fixtures": "^1.2",
         "hautelook/alice-bundle": "^1.4",
         "doctrine/doctrine-fixtures-bundle": "^2.3"
@@ -86,7 +83,8 @@
         "squizlabs/php_codesniffer": "^2.7",
         "friendsofphp/php-cs-fixer": "^2.0",
         "fzaninotto/faker": "^1.6",
-        "phpstan/phpstan": "^0.6.4"
+        "phpstan/phpstan": "^0.6.4",
+        "phpmetrics/phpmetrics": "^2.2"
     },
     "scripts": {
         "symfony-scripts": [

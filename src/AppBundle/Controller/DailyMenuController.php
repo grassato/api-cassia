@@ -68,9 +68,7 @@ class DailyMenuController extends BaseController
         $qb = $this->getManager()->getRepo()->getQueryBuilder($filtro, false);
 
         $paginador = $this->get('api_pagination_factory');
-
         $collection = $paginador->createSimpleCollection($qb, $request);
-
         return $collection;
     }
 
