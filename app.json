@@ -1,0 +1,29 @@
+{
+  "name": "Symfony API Application",
+  "description": "The api application for cassia.",
+  "keywords": [
+    "php",
+    "symfony"
+  ],
+  "website": "https://symfony.com/download",
+  "repository": "https://github.com/symfony/symfony-demo",
+  "logo": "https://symfony.com/images/v5/pictos/demoapp.svg?v=4",
+  "success_url": "/",
+  "scripts": {
+    "postdeploy": "php bin/console doctrine:database:create && php bin/console doctrine:schema:create && php bin/console doctrine:schema:update --force && php bin/console hautelook_alice:doctrine:fixtures:load -n",
+    "test-setup": "php bin/console doctrine:database:create && php bin/console doctrine:schema:create && php bin/console doctrine:schema:update --force && php bin/console hautelook_alice:doctrine:fixtures:load -n",
+    "test": "phpunit"
+  },
+  "env": {
+    "SYMFONY_ENV": {
+      "value": "heroku",
+      "description": "If you want to use the Symfony `dev` environment in the deployed application, you must move the necessary dependencies (like SensioGeneratorBundle) from `require-dev` to `require`. This will introduce security issues because development tools like the WebProfiler reveal sensitive information."
+    },
+    "SYMFONY_LOG": "php://stderr",
+    "SYMFONY_SECRET": {
+      "description": "Extra entropy for %kernel.secret%; used for CSRF tokens, cookies and signed URLs.",
+      "generator": "secret"
+    }
+  },
+  "image": "heroku/php"
+}
