@@ -22,8 +22,7 @@ monolog:
 
 doctrine:
     dbal:
-        driver:  "pdo_sqlite"
-        path:    "%kernel.root_dir%/../var/cache/api.sqlite"
+        url: "%env(DATABASE_URL)%"
         charset: "UTF8"
     orm:
         auto_generate_proxy_classes: "%kernel.debug%"

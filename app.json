@@ -5,7 +5,7 @@
     "php",
     "symfony"
   ],
-  "website": "https://symfony.com/download",
+  "website": "https://github.com/symfony/symfony-demo",
   "repository": "https://github.com/symfony/symfony-demo",
   "logo": "https://symfony.com/images/v5/pictos/demoapp.svg?v=4",
   "success_url": "/",
@@ -14,6 +14,9 @@
     "test-setup": "php bin/console doctrine:database:create && php bin/console doctrine:schema:create && php bin/console doctrine:schema:update --force && php bin/console hautelook_alice:doctrine:fixtures:load -n",
     "test": "phpunit"
   },
+  "addons": [
+    "heroku-postgresql:hobby-dev"
+  ],
   "env": {
     "SYMFONY_ENV": {
       "value": "heroku",

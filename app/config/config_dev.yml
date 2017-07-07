@@ -50,7 +50,7 @@ monolog:
 #        charset: "UTF8"
 doctrine:
     dbal:
-        driver:   pdo_mysql
+        driver:   '%env(SYMFONY__DATABASE_DRIVE)%'
         host:     '%env(SYMFONY__DATABASE_HOST)%'
         port:     '%env(SYMFONY__DATABASE_PORT)%'
         dbname:   '%env(SYMFONY__DATABASE_NAME)%'
