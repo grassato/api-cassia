@@ -10,8 +10,8 @@
   "logo": "https://symfony.com/images/v5/pictos/demoapp.svg?v=4",
   "success_url": "/",
   "scripts": {
-    "postdeploy": "php bin/console doctrine:database:create && php bin/console doctrine:schema:create && php bin/console doctrine:schema:update --force && php bin/console hautelook_alice:doctrine:fixtures:load -n",
-    "test-setup": "php bin/console doctrine:database:create && php bin/console doctrine:schema:create && php bin/console doctrine:schema:update --force && php bin/console hautelook_alice:doctrine:fixtures:load -n",
+    "postdeploy": "php bin/console doctrine:schema:create && php bin/console doctrine:schema:update --force && php bin/console hautelook_alice:doctrine:fixtures:load -n",
+    "test-setup": "php bin/console doctrine:schema:create && php bin/console doctrine:schema:update --force && php bin/console hautelook_alice:doctrine:fixtures:load -n",
     "test": "phpunit"
   },
   "addons": [

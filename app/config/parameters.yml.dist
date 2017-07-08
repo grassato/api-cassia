@@ -8,5 +8,5 @@ parameters:
     locale_supported: en|fr|de|es|cs|nl|ru|uk|ro|pt_BR|pl|it|ja|id|ca
     jwt_private_key_path: '%kernel.root_dir%/../var/jwt/private.pem' # ssh private key path
     jwt_public_key_path:  '%kernel.root_dir%/../var/jwt/public.pem'  # ssh public key path
-    jwt_key_pass_phrase:  ''                                         # ssh key pass phrase
+    jwt_key_pass_phrase:  'symfony'                                         # ssh key pass phrase
     jwt_token_ttl:        3600

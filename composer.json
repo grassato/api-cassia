@@ -37,7 +37,6 @@
         "ext-mcrypt": "*",
         "ext-intl": "*",
         "ext-pdo": "*",
-        "ext-pdo_pgsql": "*",
         "symfony/symfony": "~3.3",
         "symfony/dotenv": "~3.3",
         "doctrine/orm": "^2.5",
@@ -102,7 +101,6 @@
             "@symfony-scripts"
         ],
        "heroku-cmd": [
-         "bin/console doctrine:database:create --env=heroku",
          "bin/console doctrine:schema:update --force --env=heroku",
          "bin/console hautelook_alice:doctrine:fixtures:load -n --env=heroku"
        ]
