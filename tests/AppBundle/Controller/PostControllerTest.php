@@ -150,7 +150,8 @@ class PostControllerTest extends ApiTestCase
         foreach ($data as $key => $value) {
 
             // This response return key inseted/updated
-            var_dump($response);exit;
+            var_dump($response);
+            exit;
             $this->asserter()->assertResponsePropertyEquals($response, $key, $data[$key]);
 
             // This response has key
