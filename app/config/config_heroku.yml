@@ -22,7 +22,7 @@ monolog:
 
 doctrine:
     dbal:
-        driver:   pdo_pgsql
+        driver:   '%env(DATABASE_DRIVE)%'
         host:     '%env(DATABASE_HOST)%'
         port:     '%env(DATABASE_PORT)%'
         dbname:   '%env(DATABASE_NAME)%'
