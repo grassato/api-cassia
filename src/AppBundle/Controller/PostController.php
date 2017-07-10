@@ -67,10 +67,7 @@ class PostController extends BaseController
         }
 
         $this->getManager()->merge($entity, $id);
-
-        $post = $this->getFractalData($entity, $this->getTransformer(), 'comment');
-
-        return $this->createApiResponse($post);
+        return $entity;
     }
 
     /**
@@ -133,6 +130,31 @@ class PostController extends BaseController
          * @var $entity Post
          */
         $entity = $this->getManager()->fetch($id);
+        return $entity;
+    }
+
+    /**
+     * @throws ApiProblemException
+     * @ApiDoc(
+     *  section="Api Demo",
+     *  description="Delete a resource.",
+     *  authentication=true,
+     *  parameters={
+     *  },
+     *  requirements={
+     *  },
+     *  statusCodes={
+     *    200="Successful"
+     *  }
+     * )
+     * @FOSRest\Delete("/post/{id}", name="_post")
+     */
+    public function deleteAction($id)
+    {
+        /**
+         * @var $entity Post
+         */
+        $entity = $this->getManager()->delete($id);
         return $entity;
     }
 

@@ -3,7 +3,7 @@
 namespace BaseBundle\Tests;
 
 use Mockery as m;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 abstract class AbstractServiceORMTest extends KernelTestCase

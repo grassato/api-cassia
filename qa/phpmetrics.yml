@@ -1,0 +1,20 @@
+default:
+    path:
+        directory:
+            - src
+            - tests
+        extensions: php
+        exclude:
+            - vendor
+            - var
+            - web
+            - docs
+            - qa
+            - bin
+            - report
+
+    logging:
+        report:
+            html:   ./report/phpmetrics/phpmetrics.html
+        violations:
+            xml:    ./report/phpmetrics.xml

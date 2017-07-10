@@ -8,6 +8,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\SchemaTool;
 use Exception;
 use GuzzleHttp\Client;
+use GuzzleHttp\Handler\CurlMultiHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
 use Psr\Http\Message\RequestInterface;
@@ -40,46 +41,104 @@ class ApiTestCase extends KernelTestCase
      */
     private $formatterHelper;
 
+    /**
+     * @var bool
+     */
+    protected $useJWTAuth = true;
+
     private $responseAsserter;
 
+
+    protected static $handler = null;
+
     /**
-     * @var Client data
+     * Creates a Client.
+     *
+     * @param array $options An array of options to pass to the createKernel class
+     * @param array $server  An array of server parameters
+     *
+     * @return Client A Client instance
      */
-    protected static $clientData;
-
-    public static function setUpBeforeClass()
+    protected static function createHandler()
     {
-        $handler = HandlerStack::create();
+        if (is_null(static::$handler)) {
+            $curl = new CurlMultiHandler();
 
-        $handler->push(Middleware::history(self::$history));
-        $handler->push(Middleware::mapRequest(function (RequestInterface $request) {
-            $path = $request->getUri()->getPath();
-            if (strpos($path, '/app_test.php') !== 0) {
-                $path = '/app_test.php' . $path;
-            }
+            static::$handler = HandlerStack::create($curl);
+            static::$handler->push(Middleware::history(self::$history));
 
-            $uri = $request->getUri()->withPath($path);
 
-            return $request->withUri($uri);
-        }));
+            static::$handler->push(Middleware::mapRequest(function (RequestInterface $request) {
+                $path = $request->getUri()->getPath();
+                if (strpos($path, '/app_test.php') !== 0) {
+                    $path = '/app_test.php' . $path;
+                }
 
+                $uri = $request->getUri()->withPath($path);
+
+                return $request->withUri($uri);
+            }));
+        }
+        return static::$handler;
+    }
+
+    /**
+     * @beforeClass
+     */
+    public static function beforeClass()
+    {
+        self::bootKernel();
+        self::createDatabaseSchema();
+    }
+
+    /**
+     * Creates a mock object of a service identified by its id.
+     *
+     * @param string $id
+     *
+     * @return \PHPUnit_Framework_MockObject_MockBuilder
+     */
+    protected function getServiceMockBuilder($id)
+    {
+        $service = $this->getService($id);
+        $class = get_class($service);
+        return $this->getMockBuilder($class)->disableOriginalConstructor();
+    }
+
+    protected function createAuthenticatedClient()
+    {
+        return  $this->getAuthorizedHeaders("diego", ['Content-Type' => 'application/json']);
+    }
+
+
+    protected function tearUp()
+    {
         $baseUrl = getenv('TEST_BASE_URL');
 
         if (!$baseUrl) {
-            static::fail('No TEST_BASE_URL environmental variable set in phpunit.xml.');
+            throw new AssertionFailedError('No TEST_BASE_URL environmental variable set in phpunit.xml.');
         }
 
-
-        self::$clientData = [
+        $clientData = [
             'base_uri' => $baseUrl,
             'http_errors' => false,
-            'handler' => $handler
+            'handler' => self::createHandler(),
+
         ];
 
-        $options['environment'] = "test";
-        $options['debug'] = 1;
-        self::bootKernel($options);
+        if ($this->useJWTAuth) {
+            $clientData['headers'] =   $this->createAuthenticatedClient() ;
+        }
 
+        $this->client = new Client($clientData);
+
+        // reset the history
+        self::$history = array();
+    }
+
+
+    public static function createDatabaseSchema()
+    {
         $em = self::$kernel->getContainer()->get('doctrine')->getManager();
         $schemaTool = new SchemaTool($em);
         $metadata = $em->getMetadataFactory()->getAllMetadata();
@@ -93,31 +152,9 @@ class ApiTestCase extends KernelTestCase
         }
     }
 
-    protected function createAuthenticatedClient()
-    {
-        $clientData = array_merge(self::$clientData, [
-            'headers' => $this->getAuthorizedHeaders("diego", ['Content-Type' => 'application/json'])
-        ]);
-
-        return new Client($clientData);
-    }
-
-
-    protected function setUp()
-    {
-        $this->client = $this->createAuthenticatedClient();
-
-        // reset the history
-        self::$history = array();
-
-        $this->purgeDatabase();
-    }
-
-    /**
-     * Clean up Kernel usage in this test.
-     */
     protected function tearDown()
     {
+        $this->purgeDatabase();
         $refl = new \ReflectionObject($this);
         foreach ($refl->getProperties() as $prop) {
             if (!$prop->isStatic() && 0 !== strpos($prop->getDeclaringClass()->getName(), 'PHPUnit_')) {
@@ -125,16 +162,19 @@ class ApiTestCase extends KernelTestCase
                 $prop->setValue($this, null);
             }
         }
-        $this->getService('doctrine')->getConnection()->close();
-        parent::tearDown();
+
+        //parent::tearDown();
     }
 
 
-    private function purgeDatabase()
+
+    public function purgeDatabase()
     {
-        $purger = new ORMPurger($this->getService('doctrine')->getManager());
+        $doctrine = self::$kernel->getContainer()->get('doctrine');
+        $purger = new ORMPurger($doctrine->getManager());
         $purger->setPurgeMode(ORMPurger::PURGE_MODE_TRUNCATE);
         $purger->purge();
+        //$doctrine->getConnection()->close();
     }
 
     protected function getService($id)
@@ -142,48 +182,6 @@ class ApiTestCase extends KernelTestCase
         return self::$kernel->getContainer()
             ->get($id);
     }
-
-    /**
-     * @return \SimpleThings\EntityAudit\AuditReader
-     */
-    protected function getAuditReader()
-    {
-        return $this->getService('simplethings_entityaudit.reader');
-    }
-
-    protected function getRevisions($entity, $id)
-    {
-        $auditReader = $this->getAuditReader();
-
-        $revisions = $auditReader->findRevisions(
-            $entity, $id
-        );
-
-        return $revisions;
-    }
-
-    protected function getRevision($entity, $id)
-    {
-        $auditReader = $this->getAuditReader();
-
-        $revisions = $auditReader->find(
-            $entity, $id, $this->getCurrentRevision($entity, $id)
-        );
-
-        return $revisions;
-    }
-
-    protected function getCurrentRevision($entity, $id)
-    {
-        $auditReader = $this->getAuditReader();
-
-        $revisions = $auditReader->getCurrentRevision(
-            $entity, $id
-        );
-
-        return $revisions;
-    }
-
 
     /**
      * Print last request URL

@@ -133,9 +133,9 @@ class DailyMenuController extends BaseController
 
         $this->getManager()->getAssociationTargetObject($entityObject);
 
-        $post = $this->getManager()->save($entityObject);
+        $menu = $this->getManager()->save($entityObject);
 
-        return $post;
+        return $menu;
     }
 
     /**

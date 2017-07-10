@@ -186,7 +186,7 @@ abstract class BaseController extends FOSRestController
      * @param bool $deep
      * @return mixed
      */
-    public function validate($value, $constraints = null, $groups = null, $traverse = false, $deep = false)
+    protected function validate($value, $constraints = null, $groups = null, $traverse = false, $deep = false)
     {
         $erros = $this->getValidator()->validate($value, $constraints, $groups, $traverse, $deep);
 
@@ -210,7 +210,7 @@ abstract class BaseController extends FOSRestController
     }
 
 
-    public function getFractalItem($item, $callback, $parsearIncludes = null, $exclude = null, array $meta = array())
+    protected function getFractalItem($item, $callback, $parsearIncludes = null, $exclude = null, array $meta = array())
     {
         $resource = new Item($item, $callback);
 
@@ -263,7 +263,7 @@ abstract class BaseController extends FOSRestController
         return $rootScope->toArray();
     }
 
-    public function getFractalData($objet, $callback = null, $parsearIncludes = null, array $meta = array())
+    protected function getFractalData($objet, $callback = null, $parsearIncludes = null, array $meta = array())
     {
         if (is_array($objet)) {
             return $this->getFractalCollection($objet, $callback, $parsearIncludes, $meta);

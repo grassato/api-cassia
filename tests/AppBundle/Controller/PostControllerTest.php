@@ -11,23 +11,22 @@ namespace tests\AppBundle\Controller;
 use AppBundle\Entity\Post;
 use BaseBundle\Tests\ApiTestCase;
 use Faker\Factory;
+use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 
-/**
- * @runTestsInSeparateProcesses
- */
 class PostControllerTest extends ApiTestCase
 {
-    protected function setUp()
+    /**
+     * @before
+     */
+    protected function up()
     {
-        parent::setUp();
+        parent::tearUp();
 
         $this->createUser('diego');
     }
 
-    /**
-     * @group web
-     */
+
     protected function createPost(array $data = null)
     {
         $accessor = PropertyAccess::createPropertyAccessor();
@@ -67,7 +66,7 @@ class PostControllerTest extends ApiTestCase
         $response = $this->client->post('/api/v1/en/post', [
             'body' => json_encode($data)
         ]);
-        $finishedData = json_decode($response->getBody(true), true);
+        $finishedData = json_decode($response->getBody()->getContents(), true);
         $this->creatAndPUT($response, $data, $finishedData['id']);
     }
 
@@ -80,9 +79,10 @@ class PostControllerTest extends ApiTestCase
 
         $response = $this->client->get('/api/v1/en/post/' . $post->getId());
 
+        $this->asserter()->assertResponsePropertyContains($response, 'title', 'Post');
+
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals(1, $post->getId());
-        $this->asserter()->assertResponsePropertyContains($response,  'title', 'Post');
     }
 
     /**
@@ -104,11 +104,27 @@ class PostControllerTest extends ApiTestCase
 
         $response = $this->client->get('/api/v1/en/post');
 
-        $data = json_decode((string)$response->getBody());
+        $this->assertBasicStructure($response);
 
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertCount(2, $data);
+    }
+
+    private function assertBasicStructure($response)
+    {
+        $data = json_decode($response->getBody()->getContents(), true);
+
+        // Elements: meta, data
+        $this->assertCount(2, $data['data']);
         $this->assertInternalType('array', $data);
+
+        $this->assertArrayHasKey('data', $data);
+        $this->assertArrayHasKey('meta', $data);
+        $this->assertArrayHasKey('pagination', $data['meta']);
+        $pagination = $data['meta']['pagination'];
+        $this->assertEquals(2, $pagination['total']);
+        $this->assertEquals(2, $pagination['count']);
+        $this->assertEquals(1, $pagination['current_page']);
+        $this->assertEquals(1, $pagination['total_pages']);
     }
 
     /**
@@ -131,7 +147,6 @@ class PostControllerTest extends ApiTestCase
             'body' => json_encode($data)
         ]);
 
-
         $this->creatAndPUT($response, $data, $post->getId());
     }
 
@@ -139,44 +154,24 @@ class PostControllerTest extends ApiTestCase
     private function creatAndPUT($response, $data,  $id)
     {
         $this->assertEquals(200, $response->getStatusCode());
-        $finishedData = json_decode($response->getBody(true), true);
-
-        // Get last revision
-        //$revison = $this->getRevision(Post::class, $id);
-
-        // Is object ?
-        //$this->assertInternalType('object', $revison);
 
         foreach ($data as $key => $value) {
-
-            // This response return key inseted/updated
-            var_dump($response);
-            exit;
             $this->asserter()->assertResponsePropertyEquals($response, $key, $data[$key]);
-
-            // This response has key
-            //$this->assertArrayHasKey($key, $data);
-            //  Revision has same key of the current object
-            //$this->assertObjectHasAttribute($key, $revison);
-
-            $set = 'get'.str_replace(' ', '', ucwords(str_replace('_', ' ', $key)));
-
-            // Revision has same value of the current object
-            //$this->assertEquals($value, $revison->$set());
+            $this->asserter()->assertResponsePropertyContains($response, $key, $value);
         }
     }
 
     /**
      * @group web
      */
-//    public function testDELETEPost()
-//    {
-//        $post = $this->createPost();
-//
-//        $response = $this->client->delete('/api/v1/en/post/' . $post->getId());
-//
-//        $this->assertEquals(200, $response->getStatusCode());
-//    }
+    public function testDELETEPost()
+    {
+        $post = $this->createPost();
+
+        $response = $this->client->delete('/api/v1/en/post/' . $post->getId());
+
+        $this->assertEquals(200, $response->getStatusCode());
+    }
 
     /**
      * @group web

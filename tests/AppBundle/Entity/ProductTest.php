@@ -77,7 +77,7 @@ class ProductTest extends AbstractEntityTest
 
         $classClone = clone $class;
 
-        $this->filter->filterEntity($class);
+        $this->getFilter()->filterEntity($class);
 
         $this->assertNotContains("<script>", $class->getName());
         $this->assertNotContains("<p>", $class->getName());

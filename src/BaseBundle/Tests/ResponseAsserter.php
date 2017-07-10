@@ -7,11 +7,12 @@ use Symfony\Component\PropertyAccess\Exception\RuntimeException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\Exception\AccessException;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
+use PHPUnit\Framework\Assert;
 
 /**
  * Helper class to assert different conditions on Guzzle responses
  */
-class ResponseAsserter extends \PHPUnit_Framework_Assert
+class ResponseAsserter extends Assert
 {
     /**
      * @var PropertyAccessor
@@ -155,7 +156,7 @@ class ResponseAsserter extends \PHPUnit_Framework_Assert
             $this->accessor = PropertyAccess::createPropertyAccessor();
         }
 
-        $data = json_decode((string)$response->getBody());
+        $data = json_decode($response->getBody());
 
         if ($data === null) {
             throw new \Exception(sprintf(

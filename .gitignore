@@ -26,3 +26,4 @@ tests/report/
 *~
 *.swp
 *.swo
+/report/

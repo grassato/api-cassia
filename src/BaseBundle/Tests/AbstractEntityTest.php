@@ -1,4 +1,5 @@
 <?php
+
 namespace BaseBundle\Tests;
 
 use BaseBundle\Entity\EntityTrait;
@@ -6,45 +7,45 @@ use DMS\Filter\Filter;
 use DMS\Filter\Filters\Loader\FilterLoader;
 use DMS\Filter\Mapping;
 use Doctrine\Common\Annotations;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class AbstractEntityTest.
  */
-abstract class AbstractEntityTest extends \PHPUnit_Framework_TestCase
+abstract class AbstractEntityTest extends TestCase
 {
-    protected $filter;
-    protected $loader;
-
-    abstract public function entityClass();
-
-    public function testClassExist()
-    {
-        $this->assertTrue(class_exists(get_class($this->entityClass())));
-        $this->assertTrue(trait_exists(EntityTrait::class));
-    }
-
     /**
-     * @return array
+     * @var \DMS\Filter\Filter
      */
-    abstract public function dataProvider();
-
-    /**
-     * @return array
-     */
-    abstract public function dataArrayCollection();
+    private $filter;
 
     /**
      * @var \Prophecy\Prophet
      */
-    public $prophet;
+    private $prophet;
+
+    /**
+     * @return EntityTrait
+     */
+    abstract protected function entityClass();
+
+    /**
+     * @return array
+     */
+    abstract protected function dataProvider();
+
+    /**
+     * @return array
+     */
+    abstract protected function dataArrayCollection();
 
     /**
      * @dataProvider dataProvider
      */
     public function testCheckGetAndSetExpected($attribute, $value)
     {
-        $get = 'get'.str_replace(' ', '', ucwords(str_replace('_', ' ', $attribute)));
-        $set = 'set'.str_replace(' ', '', ucwords(str_replace('_', ' ', $attribute)));
+        $get = 'get' . str_replace(' ', '', ucwords(str_replace('_', ' ', $attribute)));
+        $set = 'set' . str_replace(' ', '', ucwords(str_replace('_', ' ', $attribute)));
 
         $class = $this->entityClass();
         $class->$set($value);
@@ -52,18 +53,12 @@ abstract class AbstractEntityTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($value, $class->$get());
     }
 
-    protected function setup()
-    {
-        $this->filter = new Filter($this->buildMetadataFactory(), new FilterLoader());
-        parent::setup();
-    }
-
     /**
      * @dataProvider dataProvider
      */
     public function testCheckMethodsFluid($attribute, $value)
     {
-        $set = 'set'.str_replace(' ', '', ucwords(str_replace('_', ' ', $attribute)));
+        $set = 'set' . str_replace(' ', '', ucwords(str_replace('_', ' ', $attribute)));
 
         $class = $this->entityClass();
         $result = $class->$set($value);
@@ -72,15 +67,46 @@ abstract class AbstractEntityTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(get_class($this->entityClass()), $result);
     }
 
+    /**
+     * @before
+     */
+    protected function tearUp()
+    {
+        $this->filter = new Filter($this->buildMetadataFactory(), new FilterLoader());
+    }
+
+    /**
+     * @after
+     */
+    protected function tearDown()
+    {
+        $refl = new \ReflectionObject($this);
+        foreach ($refl->getProperties() as $prop) {
+            if (!$prop->isStatic() && 0 !== strpos($prop->getDeclaringClass()->getName(), 'PHPUnit_')) {
+                $prop->setAccessible(true);
+                $prop->setValue($this, null);
+            }
+        }
+        \Mockery::close();
+    }
+
+    /**
+     * Check if class exists
+     */
+    public function testClassExist()
+    {
+        $this->assertTrue(class_exists(get_class($this->entityClass())));
+        $this->assertTrue(trait_exists(EntityTrait::class));
+    }
+
+    /**
+     * Check if getter and setter array using getArrayCopy, toArray, exchangeArray
+     */
     public function testCheckMethodExchangeArraySetFullMethods()
     {
         $entity = $this->entityClass();
 
         $entity->exchangeArray($this->dataArrayCollection());
-//        $accessor = PropertyAccess::createPropertyAccessor();
-//        foreach ($this->dataArrayCollection() as $key => $value) {
-//            $accessor->setValue($entity, $key, $value);
-//        }
 
         $expected = $entity->getArrayCopy();
         $expectedArray = $entity->toArray();
@@ -101,6 +127,7 @@ abstract class AbstractEntityTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $actual);
         $this->assertEquals($expectedArray, $actual);
     }
+
 
     /**
      * @expectedException \RuntimeException
@@ -124,37 +151,36 @@ abstract class AbstractEntityTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-    protected function mockCollection()
+    public function testGetMetadataFactory()
     {
-        return $this->getMockBuilder('Doctrine\Common\Collections\ArrayCollection')
-            ->disableOriginalConstructor()
-            ->getMock();
+        $this->assertInstanceOf('DMS\Filter\Mapping\ClassMetadataFactory', $this->buildMetadataFactory());
     }
 
-    protected function tearDown()
+    public function getFilter()
     {
-        $refl = new \ReflectionObject($this);
-        foreach ($refl->getProperties() as $prop) {
-            if (!$prop->isStatic() && 0 !== strpos($prop->getDeclaringClass()->getName(), 'PHPUnit_')) {
-                $prop->setAccessible(true);
-                $prop->setValue($this, null);
-            }
-        }
-        \Mockery::close();
-        parent::tearDown();
+        return $this->filter;
+    }
+
+    public function getLoader()
+    {
+        return $this->loader;
     }
 
     protected function buildMetadataFactory()
     {
         $reader = new Annotations\AnnotationReader();
         $loader = new Mapping\Loader\AnnotationLoader($reader);
-        $this->loader = $loader;
         $metadataFactory = new Mapping\ClassMetadataFactory($loader);
         return $metadataFactory;
     }
 
-    public function testGetMetadataFactory()
+    /**
+     * @return \Doctrine\Common\Collections\ArrayCollection|\PHPUnit_Framework_MockObject_MockObject
+     */
+    protected function mockCollection()
     {
-        $this->assertInstanceOf('DMS\Filter\Mapping\ClassMetadataFactory', $this->buildMetadataFactory());
+        return $this->getMockBuilder('Doctrine\Common\Collections\ArrayCollection')
+            ->disableOriginalConstructor()
+            ->getMock();
     }
 }

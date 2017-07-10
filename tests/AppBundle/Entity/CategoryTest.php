@@ -40,7 +40,7 @@ class CategoryTest extends AbstractEntityTest
 
         $classClone = clone $class;
 
-        $this->filter->filterEntity($class);
+        $this->getFilter()->filterEntity($class);
 
         $this->assertNotContains("<script>", $class->getName());
         $this->assertNotContains("<br>", $class->getName());

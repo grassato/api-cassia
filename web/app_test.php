@@ -1,6 +1,5 @@
 <?php
 
-use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\Debug\Debug;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -26,16 +25,7 @@ use Symfony\Component\HttpFoundation\Request;
 /** @var \Composer\Autoload\ClassLoader $loader */
 require __DIR__.'/../vendor/autoload.php';
 
-if (file_exists(__DIR__.'/../.env')) {
-    (new Dotenv())->load(__DIR__.'/../.env');
-}
-
-$env = isset($_SERVER['SYMFONY_ENV'])? $_SERVER['SYMFONY_ENV'] : 'test';
-$debug = isset($_SERVER['SYMFONY_DEBUG'])? $_SERVER['SYMFONY_DEBUG'] : 'true';
-
-if ($debug) {
-    Debug::enable();
-}
+Debug::enable();
 
 $kernel = new AppKernel('test', true);
 if (PHP_VERSION_ID < 70000) {
